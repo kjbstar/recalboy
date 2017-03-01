@@ -1,0 +1,8 @@
+/vendor
+/storage
+/.idea
+recalboy.sublime-project
+recalboy.sublime-workspace
+Homestead.json
+Homestead.yaml
+.env
