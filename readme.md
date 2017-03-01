@@ -1,8 +1,5 @@
 # Recalboy
 
-[![Total Downloads](https://poser.pugx.org/laravel/lumen-framework/d/total.svg)](https://packagist.org/packages/laravel/lumen-framework)
-
-
 Recalboy is your "1-click" companion for [Recalbox](http://www.recalbox.com) and is powered by the micro-framework [Lumen](http://lumen.laravel.com).
 
 I made it for a personal project, to provide a (very) little second screen for an arcade cabinet, to get access to main features of Retroarch in a breeze. 
