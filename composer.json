@@ -35,7 +35,7 @@
     "scripts": {
         "post-root-package-install": [
             "php -r \"copy('.env.example', '.env');\""
-        ]
+        ],
         "post-install-cmd": [
             "mv .env.example .env",
             "mkdir $(pwd)/storage",
