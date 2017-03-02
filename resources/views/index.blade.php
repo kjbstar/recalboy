@@ -41,6 +41,7 @@ $(document).ready(function(){
       if (id === 'QUIT') {
         $('#check').removeClass('hide');
         $('#actions').addClass('hide');
+        $('#game').addClass('hide');
         var status = 'off';
         localStorage.setItem("status", status);
       }
@@ -73,6 +74,7 @@ $(document).ready(function(){
                 var system = response.system;
                 $("#game").fadeIn("slow", function() {
                     $('#check').addClass('hide');
+                    $('#game').removeClass('hide');                
                     $('#actions').removeClass('hide');                
                     // C'est moche. TODO : générer dans le controller
                     $(this).html('<div class="grid-2 has-gutter"><div class="mas"><img src="'+image+'"></div><div class="mas"><table><tr><td>GAME</td><td>'+name+'</td></tr><tr><td>SYSTEM</td><td>'+system+'</td></tr></table></div></div>');                          
@@ -109,7 +111,7 @@ $(document).ready(function(){
 @section('contenu')
 
   <main id="main" role="main" class="txtcenter mam pas">
-    <div class="mam" id="game"></div>
+    <div class="mam hide" id="game"></div>
 
     <div class="grid-2 has-gutter hide" id="actions">
       <div class="mam action material-icons" id="SAVE_STATE">save</div>
