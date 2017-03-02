@@ -1,6 +1,6 @@
 {
-    "name": "laravel/lumen",
-    "description": "The Laravel Lumen Framework.",
+    "name": "kjbstar/recalboy",
+    "description": "The 1-click companion for Recalbox.",
     "keywords": ["framework", "laravel", "lumen"],
     "license": "MIT",
     "type": "project",
@@ -36,6 +36,13 @@
         "post-root-package-install": [
             "php -r \"copy('.env.example', '.env');\""
         ]
+        "post-install-cmd": [
+            "mv .env.example .env",
+            "mkdir $(pwd)/storage",
+            "mkdir $(pwd)/storage/app",
+            "mkdir $(pwd)/storage/app/public && chmod -R 777 storage",
+            "ln -s $(pwd)/storage/app/public $(pwd)/public/storage"
+        ]        
     },
     "minimum-stability": "dev",
     "prefer-stable": true

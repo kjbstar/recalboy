@@ -1,6 +1,7 @@
 /vendor
 /storage
 /.idea
+/public/storage
 recalboy.sublime-project
 recalboy.sublime-workspace
 Homestead.json
