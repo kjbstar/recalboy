@@ -24,6 +24,7 @@ $app = new Laravel\Lumen\Application(
 );
 
 $app->configure('filesystems');
+$app->configure('remote');
 $app->withFacades();
 
 // $app->withEloquent();
@@ -109,31 +110,5 @@ class_alias('Illuminate\Support\Facades\Storage', 'Storage');
 $app->group(['namespace' => 'App\Http\Controllers'], function ($app) {
     require __DIR__.'/../routes/web.php';
 });
-
-// Config de LaravelCollective/remote
-// Car impossible d'installer laravelista/lumen-vendor-publish sur le pi zero
-// Et ne prend pas le fichier de config ajouté manuellement.
-// Donc modif de /vendor/laravelcollective/remote/src/RemoteManager.php
-// Ligne 166 devient : $config = config('remote.connections.'.$name);
-config(['remote' => [
-
-    'default' => 'recalbox',
-    'connections' => [
-        'recalbox' => [
-            'host'      => getenv('RECALBOX_IP'),
-            'username'  => getenv('RECALBOX_LOGIN'),
-            'password'  => getenv('RECALBOX_PASS'),
-            'key'       => getenv('RECALBOX_KEY'),
-            'keytext'   => getenv('RECALBOX_KEYTEXT'),
-            'keyphrase' => getenv('RECALBOX_KEYPHRASE'),
-            'agent'     => getenv('RECALBOX_AGENT'),
-            'timeout'   => getenv('RECALBOX_TIMEOUT'),
-        ],
-    ],
-    'groups' => [
-        'web' => ['recalbox'],
-    ]        
-
-]]);
 
 return $app;
