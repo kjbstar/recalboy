@@ -82,9 +82,8 @@ Well, this process is not tested, but it should work :')
 * Get [Composer](https://getcomposer.org/download/)
 * Optional : move it to /usr/local/bin (to use it as "composer" form anywhere in your machine)
 * Go to `/var/www/html` (or anywhere else where you want to install it)
-* Require Recalboy with `composer install kjbstar/recalboy`
-* Run a few install scripts with `composer install`
-* Update dependencies with `composer update`
+* [Download](https://github.com/kjbstar/recalboy/releases) latest release.
+* Run `composer install`
 
 Bravo ! Recalboy is now installed, you should be able to access it on you server's local IP, or with the `ServerName` value you have set in `000-default.conf`, if you modify the `hosts` file of your client machine. But access by IP is fine :)
 
