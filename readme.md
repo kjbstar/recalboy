@@ -1,4 +1,4 @@
-# Recalboy
+![](public/assets/img/recalboy.png)
 
 Recalboy is your "1-click" companion for [Recalbox](http://www.recalbox.com) and is powered by the micro-framework [Lumen](http://lumen.laravel.com).
 
@@ -11,9 +11,26 @@ I made it for a personal project, to provide a (very) little second screen for a
 * Reset game
 * Exit game
 
-**DEMO**: you can watch a demo of an early version [here](<https://youtu.be/k_k3ho4qGwg>)
+# Demo & screenshots
 
-## Requirements
+You can watch a demo of an early version [on Youtube](<https://youtu.be/k_k3ho4qGwg>).
+
+Screenshots of release [0.1.2](<https://github.com/kjbstar/recalboy/releases/tag/v0.1.2>) with "micro" theme, on my 2.8" piTFT screen:
+
+### Default view, waiting for a game
+![](public/assets/img/pitft_default.png)
+
+### Game detected !
+![](public/assets/img/pitft_game.png)
+
+Click on the upper-right arrow to instantly scroll to actions buttons.
+### Four of the six actions buttons
+![](public/assets/img/pitft_actions.png)
+
+Reset and Exit buttons are not under 2nd line of buttons, to avoid to press them by mistake :)
+
+
+# Requirements
 
 You must have a local server (Raspbian, or any Unix operating system) with Apache and PHP 5.6.4 minimum, and Composer.
 My installation is done on a Raspberry Pi Zero. In this case, I suggest you to temporary increase swap memory to avoid any memory issue during installation. [Read more](http://raspberrypi.stackexchange.com/questions/70/how-to-set-up-swap-space).
@@ -27,7 +44,7 @@ You can use this [nice tutorial](https://raspbian-france.fr/installer-serveur-we
 Wamp users: not sure if Recalboy will work, as there's one symbolic link and Windows doesn't handle them.
 Virtual Machine users : I suggest you to configure your network on Bridge Access, so that your VM will get its own local IP.
 
-## Setup Apache
+# Setup Apache
 
 I suggest you to install Recalboy as default website for Apache, if you're not comfortable with web hosting.
 
@@ -75,7 +92,7 @@ I suggest you to install Recalboy as default website for Apache, if you're not c
 * Activate url rewriting if necessary `sudo a2enmod rewrite`.
 
 
-## Installation
+# Installation
 
 Well, this process is not tested, but it should work :')
 
@@ -89,12 +106,12 @@ Well, this process is not tested, but it should work :')
 Bravo ! Recalboy is now installed, you should be able to access it on you server's local IP, or with the `ServerName` value you have set in `000-default.conf`, if you modify the `hosts` file of your client machine. But access by IP is fine :)
 
 
-## Configuration
+# Configuration
 
 Now setup your Recalbox IP in `.env` file, line 15.
 That's it ! The most common values of a classic Recalbox installation are already set.
 
-### IMPORTANT
+## IMPORTANT
 You **MUST** activate network commands in Retroarch to make Recalboy working with your Recalbox.
 To do so, enable network commands in the Retroarch settings menu, or ensure that network_cmd_enable = "true" is set in retroarch.cfg.
 
@@ -123,13 +140,13 @@ To do so, enable network commands in the Retroarch settings menu, or ensure that
 You then have options to set the keys of your storage solution.
 
 
-## TODO
-* Improve the layout when I'll get my PiTFT screen :)
-* Maybe a templating system to easily choose another layout
+# TODO
+* <strike>Improve the layout when I'll get my PiTFT screen :)</strike> --> DONE
+* <strike>Maybe a templating system to easily choose another layout</strike> --> DONE
 * Add more informations from running games, to get something less basic.
-* Arcade games : finding, adding, and managing the display of instructions card / move lists, to never forget how to make a Hadoken :)
+* Arcade games : finding, adding, and managing the display of instructions card / move lists, to never forget how to make a Hadoken :) --> WORK IN PROGRESS
 
-## Limitations
+# Limitations
 Sadly, as Recalboy use Retroarch Network Commands, keep in mind that the following systems are (still) not supported :
 * Dosbox
 * Pifba
