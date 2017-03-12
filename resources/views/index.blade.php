@@ -5,7 +5,7 @@
 
 @section('css')
 @parent
-<link rel="stylesheet" href="{{public_path('assets/css/mini.css')}}" media="all">
+<link rel="stylesheet" href="{{public_path('assets/css/'.getenv('THEME').'.css')}}" media="all">
 @stop
 
 @section('js')
@@ -51,17 +51,14 @@ $(document).ready(function(){
                 var status = 'on'; 
                 localStorage.setItem("status", status);
 
-                var name = response.name;
-                var image = '/storage/'+response.image_path;
-                var system = response.system;
+                var htmlrender = response.html;
                 var core = response.core
                 $('#game').fadeIn('slow', function() {
                     $('#check').addClass('hide');
                     if (core === 'retroarch'){
                       $('#actions').removeClass('hide');        
                     }        
-                    // C'est moche. TODO : générer dans le controller
-                    $(this).html('<div class="grid-2 has-gutter"><div class="mas"><img src="'+image+'"></div><div class="mas"><div class="grid has-gutter"><img src="'+response.system_logo+'"></div><table><tr><td>GAME</td><td>'+name+'</td></tr><tr><td>SYSTEM</td><td>'+system+'</td></tr></table></div></div>');                          
+                    $(this).html(htmlrender);                          
                 });  
 
                 if ( response.extras != 'undefined' ) {
@@ -107,6 +104,7 @@ $(document).ready(function(){
     <div class="mam" id="game"></div>
 
     <div class="grid-2 has-gutter hide" id="actions">
+      <a name="actions"></a>
       <div class="mam action material-icons" id="SAVE_STATE">save</div>
       <div class="mam action material-icons" id="LOAD_STATE">restore</div>
       <div class="mam action material-icons" id="SCREENSHOT">photo_camera</div>

@@ -1,0 +1,25 @@
+/* 2 lines layout */
+.material-icons {
+  font-size:86px;
+  line-height: inherit;  
+  display: inline-block;
+  cursor: pointer;
+  width: 160px;
+  max-height: 130px; 
+}
+/* 3 lines layout */
+/*.material-icons {
+  font-size:56px;
+  line-height: inherit;  
+  display: inline-block;
+  cursor: pointer;
+  width: 160px;
+  max-height: 110px; 
+}*/
+
+@media (max-width: 381px) {
+    .pas, .mam {
+        margin: -2px;
+        padding: 0;
+    }
+}

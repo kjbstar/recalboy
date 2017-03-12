@@ -28,6 +28,8 @@ class GameController extends BaseController
 			$this->output = array("status" => "off");
 		}
 
+        self::renderHtml($this->output);
+
     	return response()->json($this->output);
     	
     }
@@ -148,5 +150,22 @@ class GameController extends BaseController
     	}
 
     }
+
+
+    public function renderHtml($output) {
+
+        if ($output['status'] == 'on') {
+            switch (getenv('THEME')) {
+                case 'micro':
+                    $html = '<div class="grid-2 has-gutter"><div class="mas"><img src="/storage/'.$output['image_path'].'"></div><div class="mas"><div class="grid has-gutter"><img src="'.$output['system_logo'].'"></div></div><a href="#actions" class="material-icons" id="gotoactions">arrow_downward</a></div>';
+                    break;
+                default:
+                    $html = '<div class="grid-2 has-gutter"><div class="mas"><img src="/storage/'.$output['image_path'].'"></div><div class="mas"><div class="grid has-gutter"><img src="'.$output['system_logo'].'"></div><table><tr><td>GAME</td><td>'.$output['name'].'</td></tr><tr><td>SYSTEM</td><td>'.$output['system'].'</td></tr></table></div></div>';
+                    break;
+            }
+            $this->output['html'] = $html;
+        }
+
+    }    
 
 }
