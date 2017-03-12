@@ -27,7 +27,7 @@ Click on the upper-right arrow to instantly scroll to actions buttons.
 ### Four of the six actions buttons
 ![](public/assets/img/pitft_actions.png)
 
-Reset and Exit buttons are not under 2nd line of buttons, to avoid to press them by mistake :)
+Reset and Exit buttons are under these buttons, to avoid to press them by mistake :)
 
 
 # Requirements
