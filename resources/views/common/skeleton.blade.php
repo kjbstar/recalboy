@@ -7,7 +7,25 @@
     <title>@section('titre')@show</title>
     @section('css')
     <link rel="stylesheet" href="{{public_path('assets/css/knacss.css')}}" media="all">
-    <link rel="stylesheet" href="{{public_path('assets/css/styles.css')}}" media="all">
+    <style type="text/css">
+    @font-face {
+      font-family: 'Material Icons';
+      font-style: normal;
+      font-weight: 400;
+      src: url({{public_path('assets/fonts/MaterialIcons-Regular.eot')}}); /* For IE6-8 */
+      src: local('Material Icons'),
+           local('MaterialIcons-Regular'),
+           url({{public_path('assets/fonts/MaterialIcons-Regular.woff2')}}) format('woff2'),
+           url({{public_path('assets/fonts/MaterialIcons-Regular.woff')}}) format('woff'),
+           url({{public_path('assets/fonts/MaterialIcons-Regular.ttf')}}) format('truetype');
+    }
+    .hide {
+      display: none;
+    }
+    .show {
+      display: block!important;
+    }
+    </style>
     @show
   </head>
   <body>

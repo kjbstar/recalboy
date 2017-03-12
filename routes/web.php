@@ -13,7 +13,7 @@
 
 $app->get('/', function() {
 	// TODO : faire un système de templates pour ne pas être restreint de la seule grille
-    return view('index', ['refresh'=> getenv('REFRESH_AUTO'), 'refresh_delay' => getenv('REFRESH_DELAY')]);
+    return view(getenv('THEME'), ['refresh'=> getenv('REFRESH_AUTO'), 'refresh_delay' => getenv('REFRESH_DELAY')]);
 });
 
 $app->group(['prefix' => 'action'], function($app)
