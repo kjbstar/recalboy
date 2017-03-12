@@ -1,4 +1,4 @@
-![](public/assets/img/recalboy.png)
+<img src="public/assets/img/recalboy.png" width="200">
 
 Recalboy is your "1-click" companion for [Recalbox](http://www.recalbox.com) and is powered by the micro-framework [Lumen](http://lumen.laravel.com).
 
