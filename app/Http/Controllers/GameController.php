@@ -3,21 +3,26 @@
 namespace App\Http\Controllers;
 
 use Laravel\Lumen\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\File;
 
 class GameController extends BaseController
 {
 
 	private $output;
+	private $core;
 
     public function check() {
 		
-    	$commande = "ps aux | grep 'retroarch -L' | egrep -o ".getenv('RECALBOX_ROMS_PATH')."'/.*'";
-
-		$game = \SSH::run($commande, function($output)
-		{	
-			$game = self::getGame($output);
-			$this->output = self::getInfos($game);
-		});
+    	$array_commandes = array(
+    		"retroarch" => "ps aux | grep 'retroarch -L' | egrep -o ".getenv('RECALBOX_ROMS_PATH')."'/.*'", // Retroarch
+    		"fba2x" => "ps aux | grep '/usr/bin/fba2x' | egrep -o ".getenv('RECALBOX_ROMS_PATH')."'/.*'", // FBA
+    	);
+   	
+    	foreach ($array_commandes as $key => $commande) {
+    		if (is_null($this->output) || ( is_array($this->output) && count($this->output) === 1 ) ) {
+    			$this->output = self::findGame($key, $commande);
+    		}
+    	}
 		
 		if (is_null($this->output)) {
 			$this->output = array("status" => "off");
@@ -58,9 +63,16 @@ class GameController extends BaseController
 	    			$gameinfos['status'] = 'on';
 	    			$gameinfos['name'] = (string)$gamexml->name;
 	    			$gameinfos['image_path'] = self::getImage((string)$gamexml->image, $downloaded_images_path, $game['system']);
-	    			$gameinfos['system'] = $game['system'];
+                    $gameinfos['system'] = $game['system'];
+	    			$gameinfos['system_logo'] = self::getSystemImage($game['system']);
 	    		}
 	    	}
+
+	    	$extras = self::getExtras($game['file']);
+	    	if (!is_null($extras)) {
+	    		$gameinfos['extras'] = $extras;
+	    	}
+
     	} else {
    			$gameinfos['status'] = 'off';
     	}
@@ -84,5 +96,57 @@ class GameController extends BaseController
 
     }
 
+
+     public function getSystemImage($system) {
+
+        $remote = '/recalbox/share/system/.emulationstation/themes/recalbox-multi/'.$system.'/data/logo.svg';
+        $fichier = \Storage::put('systems/'.$system.'.svg', 1);
+        $local = storage_path('app/public/systems/'.$system.'.svg');       
+
+        \SSH::into('recalbox')->get($remote, $local);
+
+        $system_logo = public_path('storage/systems/'.$system.'.svg');
+
+        return $system_logo;
+
+    }   
+
+
+    public function findGame($key, $commande) {
+
+		\SSH::run($commande, function($output)
+		{	
+			$game = self::getGame($output);
+			$this->output = self::getInfos($game);
+		});
+
+		$this->output['core'] = $key;
+
+		return $this->output;
+
+    }
+
+
+    public function getExtras($gamefile) {
+
+    	// On gicle l'extension
+    	$gamename = preg_replace('/\\.[^.\\s]{3,4}$/', '', $gamefile);
+
+    	$path = base_path('public/assets/extras/'.$gamename);
+
+    	// On cherche si on a un dossier de ce nom
+    	if (File::exists($path)) {
+    		$files = File::files($path);
+    		// On change le chemin en mode public
+    		foreach ($files as $key => $value) {
+    			$files[$key] = strstr($value, "assets");
+    		}
+    		return $files;
+    	} else {
+    		$files = null;
+    		return $files;
+    	}
+
+    }
 
 }
