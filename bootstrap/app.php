@@ -55,6 +55,12 @@ $app->singleton(
         return new Illuminate\Filesystem\FilesystemManager($app);
     }
 );
+$app->singleton(
+    Illuminate\Contracts\Filesystem\Factory::class,
+    function ($app) {
+        return new Illuminate\Filesystem\FilesystemManager($app);
+    }
+);
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
