@@ -71,7 +71,7 @@ html > ::-webkit-scrollbar {
     background-color: orangered;
     color: white;
 }
-#gotoactions {
+#gotoactions, #demo_launch {
     position: absolute;
     top: 0;
     right: 0;

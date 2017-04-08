@@ -25,3 +25,8 @@ $app->group(['prefix' => 'game'], function($app)
 {
     $app->get('check','GameController@check');
 });
+
+$app->group(['prefix' => 'game'], function($app)
+{
+    $app->get('demo/launch','DemoController@launch');
+});

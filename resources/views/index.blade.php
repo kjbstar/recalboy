@@ -16,14 +16,14 @@ $(document).ready(function(){
 
     var status = 'off';
     localStorage.setItem("status", status);
-    
+
     // Boutons d'actions
     $(".action").click(function(){
     	var id = $(this).attr('id');
       if (id === 'QUIT') {
-        $('#check').removeClass('hide');
         $('#actions').addClass('hide');
         $('#game').addClass('hide');
+        $('#check').removeClass('hide');
         var status = 'off';
         localStorage.setItem("status", status);
       }
@@ -77,6 +77,27 @@ $(document).ready(function(){
          });      
       };
 
+
+    function demogame() {
+        $.ajax({
+            url : '{{ url("game/demo/launch") }}',
+            type: 'get',
+            dataType: 'json',
+
+            beforeSend: function() {
+              
+            },
+
+            success: function(response) {
+
+            },
+
+            complete: function(response) {
+            }
+         });      
+      };
+
+
     // Refresh auto - Defaut : toutes les 10 secondes
     var refresh = '{{ $refresh }}';
     var refresh_delay = '{{ $refresh_delay }}';
@@ -92,6 +113,11 @@ $(document).ready(function(){
     $(".checkgame").click(function(){
         checkgame();
     });
+
+    // Lancer une démo
+    $("#demo_launch").click(function(){
+        demogame();
+    });    
 
 });
 
@@ -115,7 +141,10 @@ $(document).ready(function(){
 
     <div class="mam" id="extras"></div>
 
-    <div class="mam txtcenter" id="check"><img src="{{public_path('assets/img/recalboy.png')}}" class="checkgame"></div>
+    <div class="mam txtcenter" id="check">
+      <a href="#" class="material-icons" id="demo_launch" style="position:fixed">ondemand_video</a>
+      <img src="{{public_path('assets/img/recalboy.png')}}" class="checkgame">
+    </div>
 
   </main>
 
