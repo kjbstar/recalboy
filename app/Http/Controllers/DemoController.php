@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Recalbox\Files as Files;
 use App\Models\Recalbox\Gamepad as Gamepad;
+use App\Models\Recalbox\Configuration as Config;
 
 class DemoController extends BaseController
 {
@@ -20,7 +21,7 @@ class DemoController extends BaseController
 	private $evtest;
 
     public function launch() {
-		//Cache::flush();
+
 		// On va chercher la gamelist d'un système
     	$array_systems = explode(',', getenv('DEMO_SYSTEMS'));
     	$rand_systems = array_rand($array_systems);
@@ -35,18 +36,13 @@ class DemoController extends BaseController
     	$gamefile = substr((string)$game->path, 2);
 
     	// Et je baisse le son \o/
-    	/*$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, 'http://'.getenv('RECALBOX_IP').':1337/audio/volume');
-		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-		curl_setopt($ch, CURLOPT_POSTFIELDS, '0');
-		$result = curl_exec($ch);*/
+    	$audio = Config::setValue('audio.volume', 0);
 
 		// Maintenant on va faire comme l'API, mais en vilain PHP
 		// On récupère les settings de ES
 		$emusettings = Files::getEmuSettings();
 		// On génère les params de gamepads connectés
 		$emuLauncherGamePadsParams = self::genGamePads($emusettings);
-		//die(var_dump($emuLauncherGamePadsParams.' GUID PLAYER ONE = '.$this->guidPlayerOne));
 
 		// Chemin du jeu
     	$fullgamepath = $remote.'/'.$gamefile;
@@ -58,12 +54,12 @@ class DemoController extends BaseController
     	$commande_startgame = 'python /usr/lib/python2.7/site-packages/configgen/emulatorlauncher.pyc '.$emuLauncherGamePadsParams.' -rom "'.$fullgamepath.'" -system "'.$system.'"';
     	$commande_listeninputs = 'cd /tmp && evtest '.Cache::get('devicePathPlayerOne').' > inputs.log';
 
+    	// On kill ES
 		\SSH::run($commande_esoff, function($esoff){ $this->esoff = $esoff; });
 		sleep(1);
+
+		// On lance le jeu !
 		\SSH::run($commande_startgame, function($startgame){ $this->startgame = $startgame; });
-
-		//die(var_dump($commande_startgame.' ********** '.$this->output.' --- '.$this->output2));
-
 
 		// J'ai besoin de récuperer la valeur "code" des boutons Hotkey et Start du player one
 		$input_file = Files::getEmuInputCfg();
