@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Laravel\Lumen\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
+use App\Models\Recalbox\Files as Files;
+use App\Models\Recalbox\Gamepad as Gamepad;
 
 class DemoController extends BaseController
 {
@@ -24,7 +26,7 @@ class DemoController extends BaseController
     	$rand_systems = array_rand($array_systems);
     	$system = $array_systems[$rand_systems];
 	    $remote = getenv('RECALBOX_ROMS_PATH').'/'.$system;
-	    $gamelist = self::getGamelist($remote, $system);
+	    $gamelist = Files::getGamelist($remote, $system);
 
 	    // On choisit un jeu au hasard
     	$xml = simplexml_load_file($gamelist);
@@ -41,7 +43,7 @@ class DemoController extends BaseController
 
 		// Maintenant on va faire comme l'API, mais en vilain PHP
 		// On récupère les settings de ES
-		$emusettings = self::getEmuSettings();
+		$emusettings = Files::getEmuSettings();
 		// On génère les params de gamepads connectés
 		$emuLauncherGamePadsParams = self::genGamePads($emusettings);
 		//die(var_dump($emuLauncherGamePadsParams.' GUID PLAYER ONE = '.$this->guidPlayerOne));
@@ -64,8 +66,8 @@ class DemoController extends BaseController
 
 
 		// J'ai besoin de récuperer la valeur "code" des boutons Hotkey et Start du player one
-		$input_file = self::getEmuInputCfg();
-		$codesPlayerone = self::getCodes($input_file);
+		$input_file = Files::getEmuInputCfg();
+		$codesPlayerone = Gamepad::getCodes($input_file);
     
     	// Maintenant on lance evtest
     	\SSH::run($commande_listeninputs, function($evtest){ $this->evtest = $evtest; });
@@ -75,74 +77,7 @@ class DemoController extends BaseController
     	// On a terminé ici, maintenant faudra écouter evtest...
 
     }
-    
-
-
-
-    public function getGamelist($remote, $system) {
-
-    	$cached = Cache::remember('demo_gamelist_'.$system, 60, function() use ($remote, $system) {
-		    $fichier = \Storage::put('gamelists/'.$system.'.xml', 1);
-		    $local = storage_path('app/public/gamelists/'.$system.'.xml');
-		    \SSH::into('recalbox')->get($remote.'/gamelist.xml', $local);
-		    return $local;
-    	});
-
-    	return $cached;
-    }
-
-
-    public function getEmuSettings() {
-
-    	$cached = Cache::remember('es_settings', 15, function() {
-	        $remote = '/recalbox/share/system/.emulationstation/es_settings.cfg';
-	        $fichier = \Storage::put('settings/es_settings.xml', 1);
-	        $local = storage_path('app/public/settings/es_settings.xml');       
-	        \SSH::into('recalbox')->get($remote, $local);
-		    return $local;
-    	});
-
-        return $cached;
-
-    }
-
-
-    public function getEmuInputCfg() {
-
-    	$cached = Cache::remember('es_input', 15, function() {
-	        $remote = '/recalbox/share/system/.emulationstation/es_input.cfg';
-	        $fichier = \Storage::put('settings/es_input.xml', 1);
-	        $local = storage_path('app/public/settings/es_input.xml');       
-	        \SSH::into('recalbox')->get($remote, $local);
-		    return $local;
-    	});
-
-        return $cached;
-
-    }
-
-    public function getCodes($input_file) {
-
-     	$cached = Cache::remember('playerone_codes', 15, function() use ($input_file) {
-     		$guid = Cache::get('guidPlayerOne');
-     		$xml = simplexml_load_file($input_file);
-     		$controllers = $xml->xpath('inputConfig');
-     		$codesPlayerone = array();
-     		foreach ($controllers as $key => $value) {
-     			$controller = (array) $value;
-     			if ( $controller['@attributes']['deviceGUID'] == $guid ) {
-     				foreach ($controller['input'] as $key => $value) {
-     					$input = (array) $value;
-     					$codesPlayerone[$input['@attributes']['name']] = $input['@attributes']['code'];
-     				}
-     			}
-     		}
-		    return $codesPlayerone;
-    	});
-
-        return $cached;   	
-
-    }    
+       
 
 
     public function genGamePads($emusettings) {

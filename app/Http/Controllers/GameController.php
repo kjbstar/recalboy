@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Laravel\Lumen\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\File;
+use App\Models\Recalbox\Files as Files;
 
 class GameController extends BaseController
 {
@@ -47,14 +48,11 @@ class GameController extends BaseController
     public function getInfos($game) {
 
     	if (is_array($game)) {
-	    	$remote = getenv('RECALBOX_ROMS_PATH').'/'.$game['system'].'/gamelist.xml';
-	    	$downloaded_images_path = getenv('RECALBOX_ROMS_PATH').'/'.$game['system'];
-	    	// Je sais pas pourquoi ça fait ça maintenant, mais faut créer le fichier en amont...
-	    	$fichier = \Storage::put('gamelists/'.$game['system'].'.xml', 1);
-	    	$local = storage_path('app/public/gamelists/'.$game['system'].'.xml');
 
-	    	// On télécharge. A chaque fois, pour avoir un fichier à jour. Plus simple :p
-	    	\SSH::into('recalbox')->get($remote, $local);
+            $downloaded_images_path = getenv('RECALBOX_ROMS_PATH').'/'.$game['system'];
+            $remote = getenv('RECALBOX_ROMS_PATH').'/'.$game['system'];
+
+            $local = Files::getGamelist($remote, $game['system']);
 
 	    	$xml = simplexml_load_file($local);
 	    	$gameinfos = array();
@@ -64,9 +62,9 @@ class GameController extends BaseController
 	    		if (strpos($gamexml->path, $game['file']) !== false) {
 	    			$gameinfos['status'] = 'on';
 	    			$gameinfos['name'] = (string)$gamexml->name;
-	    			$gameinfos['image_path'] = self::getImage((string)$gamexml->image, $downloaded_images_path, $game['system']);
+	    			$gameinfos['image_path'] = Files::getGameImage((string)$gamexml->image, $downloaded_images_path, $game['system']);
                     $gameinfos['system'] = $game['system'];
-	    			$gameinfos['system_logo'] = self::getSystemImage($game['system']);
+	    			$gameinfos['system_logo'] = Files::getSystemImage($game['system']);
 	    		}
 	    	}
 
@@ -83,35 +81,6 @@ class GameController extends BaseController
     	
     }        
 
-
-    public function getImage($image_path, $downloaded_images_path, $system) {
-
-    	// On retire le "./" du chemin
-    	$image_path = substr($image_path, 2);
-    	$remote = $downloaded_images_path.'/'.$image_path;
-    	$fichier = \Storage::put(''.$image_path, 1);
-    	$local = storage_path('app/public/'.$image_path);    	
-
-    	\SSH::into('recalbox')->get($remote, $local);
-
-    	return $image_path;
-
-    }
-
-
-     public function getSystemImage($system) {
-
-        $remote = '/recalbox/share/system/.emulationstation/themes/recalbox-multi/'.$system.'/data/logo.svg';
-        $fichier = \Storage::put('systems/'.$system.'.svg', 1);
-        $local = storage_path('app/public/systems/'.$system.'.svg');       
-
-        \SSH::into('recalbox')->get($remote, $local);
-
-        $system_logo = public_path('storage/systems/'.$system.'.svg');
-
-        return $system_logo;
-
-    }   
 
 
     public function findGame($key, $commande) {
