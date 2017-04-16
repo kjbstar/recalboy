@@ -12,13 +12,12 @@ use App\Models\Recalbox\Configuration as Config;
 class DemoController extends BaseController
 {
 
-	private $esoff;
 	private $startgame;
 	private $arch;
 	private $joystickCount;
 	private $joystickGuid;
 	private $joystickName;
-	private $evtest;
+	private $inputs;
 
     public function launch() {
 
@@ -36,7 +35,7 @@ class DemoController extends BaseController
     	$gamefile = substr((string)$game->path, 2);
 
     	// Et je baisse le son \o/
-    	$audio = Config::setValue('audio.volume', 0);
+    	$audio = Config::setValue('audio.volume', getenv('DEMO_VOLDOWN'));
 
 		// Maintenant on va faire comme l'API, mais en vilain PHP
 		// On récupère les settings de ES
@@ -52,28 +51,119 @@ class DemoController extends BaseController
     	$commande_esoff = 'killall -9 emulationstation';
     	$commande_eson = '/etc/init.d/S31emulationstation start';
     	$commande_startgame = 'python /usr/lib/python2.7/site-packages/configgen/emulatorlauncher.pyc '.$emuLauncherGamePadsParams.' -rom "'.$fullgamepath.'" -system "'.$system.'"';
-    	$commande_listeninputs = 'cd /tmp && evtest '.Cache::get('devicePathPlayerOne').' > inputs.log';
+    	$commande_listeninputs = 'cd /tmp && evtest '.Cache::get('devicePathPlayerOne').' > inputs.log &';
 
     	// On kill ES
-		\SSH::run($commande_esoff, function($esoff){ $this->esoff = $esoff; });
+		\SSH::run($commande_esoff);
 		sleep(1);
 
 		// On lance le jeu !
-		\SSH::run($commande_startgame, function($startgame){ $this->startgame = $startgame; });
+		\SSH::run($commande_startgame);
 
 		// J'ai besoin de récuperer la valeur "code" des boutons Hotkey et Start du player one
 		$input_file = Files::getEmuInputCfg();
 		$codesPlayerone = Gamepad::getCodes($input_file);
     
     	// Maintenant on lance evtest
-    	\SSH::run($commande_listeninputs, function($evtest){ $this->evtest = $evtest; });
-    	// On met en cache son pid pour le tuer le moment venu
-    	Cache::put('pidevtest', $this->evtest, 600);
+    	\SSH::run($commande_listeninputs);
+    	// Dommage, la commande ne renvoit pas les outputs des process lancés en background, donc pas de pid, pas de gestion fine, on fera un killall...
+    	//Cache::put('pidevtest', $this->evtest, 600);
+
+    	// TODO vérifier si un jeu a bien été lancé !!
+    	return response()->json(array('demo' => true));
 
     	// On a terminé ici, maintenant faudra écouter evtest...
 
     }
-       
+ 
+
+ 	public function checkPlayer() {
+
+ 		$codes = Cache::get('playerone_codes');
+
+ 		// Si au moins 3 boutons principaux (pas une direction) ont été appuyés, alors on considère que le joueur a pris la main, il faut arrêter le mode démo 		
+ 		$boutons = array(
+ 				'a' => (int) $codes['a'],
+ 				'b' => (int) $codes['b'],
+ 				'x' => (int) $codes['x'],
+ 				'y' => (int) $codes['y'],
+ 				'select' => (int) $codes['select'],
+ 				'start' => (int) $codes['start'],
+ 				'hotkey' => (int) $codes['hotkey']
+ 			);
+
+ 		// On a déjà filtré pour ne garder que les boutons, pas les directions ou autre. Mais l'array $boutons permettra éventuellement des features futures.
+ 		\SSH::run('tail -100 /tmp/inputs.log | grep "^Event:" | grep "EV_KEY" | grep "value 1" | sed "s/^.* \([-]\?[0-9]\+\) (.*), value 1/\1/"', function($output){
+ 			$this->inputs = $output;
+ 		});
+
+ 		$output_tmp = preg_split('/\s+/', trim($this->inputs));
+ 		//$output_tmp = preg_split('/ +/', trim('314 314 314 314 314 314 315 304 304 307 305 305 307 307 308 308 308 305 304 304 304 304 305 305 305 305 305 305 305 316 '));
+
+ 		// On remet bien en tout en integers (plus moche, mais plus rapide)
+ 		foreach ($output_tmp as $key => $value) {
+ 			$output[] = (int) $value;
+ 		}
+
+ 		// On compare les 2 arrays
+ 		$resultat = array_intersect($boutons, $output);
+
+ 		// Question => Est-ce que le joueur a quitté le jeu via la manette ? Si oui, il faut relancer ES
+ 		// J'ai un doute sur la pertinence de l'emplacement de cette fonction ici, et son champ d'action (quid si à la manette je save puis j'appuie sur start ?...). On verra si ca pose problème ou pas.
+ 		if (array_key_exists('start', $resultat) && array_key_exists('hotkey', $resultat)) {
+ 			return response()->json(array('demo' => 'gamepad_quit'));
+ 		}
+
+ 		// Si je trouve hotkey sans start, et que le joueur n'a pas pris la main, alors on passe direct au jeu suivant (simuler un mode "random play")
+ 		if (array_key_exists('hotkey', $resultat)) {
+ 			return response()->json(array('demo' => 'gamepad_skip'));
+ 		} 		 
+
+ 		// On check si on a bien au moins 3 boutons qui ont été appuyés. Si oui, on arrête le mode démo !
+ 		if (count($output) >= 3) {
+ 			// Et je monte le son :)
+	 		Config::setValue('audio.volume', getenv('DEMO_VOLUP'));			
+ 			return response()->json(array('demo' => false));
+ 		} else {
+ 			return response()->json(array('demo' => true));
+ 		}
+
+ 	}
+
+
+    public function off() {
+
+    	//$commande = '/etc/init.d/S31emulationstation start &';
+    	// Pour une raison qui m'échappe, la commande s'arrête au bout de 3/4 secondes et ES ne termine pas son démarrage (?!)
+    	// Du coup je prend la commande complète, en 2 fois, au lieu du script S31... Là ca marche (!?)
+
+    	// System language : pas besoin de la commande python pour ca, je vais direct aller le lire
+    	$language = Config::getValue('system.language');
+    	$commande = 'HOME=/recalbox/share/system LC_ALL=\"'.$language.'.UTF-8\" SDL_VIDEO_GL_DRIVER=/usr/lib/libGLESv2.so SDL_NOMOUSE=1 /usr/bin/emulationstation; [ -f /tmp/shutdown.please ] && (shutdown -h now);[ -f /tmp/reboot.please ] && (shutdown -r now) &';
+
+    	// On tue evtest
+		self::kill();
+
+		// On remet le son
+		Config::setValue('audio.volume', getenv('DEMO_VOLUP'));			
+
+    	// On redémarre ES
+		\SSH::run($commande);
+
+    	return response()->json(array('demo' => false));
+
+    }
+
+
+    public function kill() {
+
+    	//$commande = 'kill '.Cache::get('pidevtest');
+    	$commande = 'killall -9 evtest';
+		
+    	// On kill ce qu'on à killer (evtest...)
+		\SSH::run($commande);
+
+    }
 
 
     public function genGamePads($emusettings) {

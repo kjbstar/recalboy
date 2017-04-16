@@ -10,7 +10,7 @@ class Gamepad extends Model
 {
     public static function getCodes($input_file) {
 
-        $cached = Cache::remember('playerone_codes', 15, function() use ($input_file) {
+        $cached = Cache::remember('playerone_codes', 120, function() use ($input_file) {
             $guid = Cache::get('guidPlayerOne');
             $xml = simplexml_load_file($input_file);
             $controllers = $xml->xpath('inputConfig');

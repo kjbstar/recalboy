@@ -13,7 +13,7 @@
 
 $app->get('/', function() {
 	// TODO : faire un système de templates pour ne pas être restreint de la seule grille
-    return view('index', ['refresh'=> getenv('REFRESH_AUTO'), 'refresh_delay' => getenv('REFRESH_DELAY')]);
+    return view('index', ['refresh'=> getenv('REFRESH_AUTO'), 'refresh_delay' => getenv('REFRESH_DELAY'), 'demo_duration'=> getenv('DEMO_DURATION')]);
 });
 
 $app->group(['prefix' => 'action'], function($app)
@@ -29,4 +29,19 @@ $app->group(['prefix' => 'game'], function($app)
 $app->group(['prefix' => 'game'], function($app)
 {
     $app->get('demo/launch','DemoController@launch');
+});
+
+$app->group(['prefix' => 'game'], function($app)
+{
+    $app->get('demo/off','DemoController@off');
+});
+
+$app->group(['prefix' => 'game'], function($app)
+{
+    $app->get('demo/kill','DemoController@kill');
+});
+
+$app->group(['prefix' => 'game'], function($app)
+{
+    $app->get('demo/player','DemoController@checkPlayer');
 });

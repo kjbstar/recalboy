@@ -17,19 +17,6 @@ $(document).ready(function(){
     var status = 'off';
     localStorage.setItem("status", status);
 
-    // Boutons d'actions
-    $(".action").click(function(){
-    	var id = $(this).attr('id');
-      if (id === 'QUIT') {
-        $('#actions').addClass('hide');
-        $('#game').addClass('hide');
-        $('#check').removeClass('hide');
-        var status = 'off';
-        localStorage.setItem("status", status);
-      }
-      $.get("{{ url('/action') }}/"+id);
-    });
-
     // Ajax de recherche de jeu
     function checkgame() {
         $.ajax({
@@ -78,36 +65,149 @@ $(document).ready(function(){
       };
 
 
+    // Gestion du mode démo
     function demogame() {
+      // Cs 2 ifs permettent de gérer les cas des mobiles/tablettes qui passent en veille: il suffirait alors de rafraichir la page et de "relancer" le mode démo, qui reprendrait alors sa surveillance sans relancer de jeu. Comportement simulé en desktop, c'est ok, mais à tester :p
+      if (localStorage.getItem('demo') === 'off' || localStorage.getItem('demo') === null) {
         $.ajax({
             url : '{{ url("game/demo/launch") }}',
             type: 'get',
             dataType: 'json',
 
-            beforeSend: function() {
-              
-            },
-
             success: function(response) {
-
+              if (response.demo === true) {
+                goCheckGame();
+                localStorage.setItem('demo', 'on');
+              }               
             },
 
             complete: function(response) {
+              manageDemo();
             }
-         });      
-      };
+         });    
+      }
+      if (localStorage.getItem('demo') === 'on') {
+        goCheckGame();
+        manageDemo();
+      }  
+    };
+
+
+    function manageDemo() {
+      var timeOnScreen = {{ $demo_duration }};
+
+      // Rotation des jeux quand aucune interaction
+      window.setInterval(function(){
+        if (localStorage.getItem('demo') === 'on') {
+          actionQuit();
+          $.get("{{ url('/action') }}/QUIT");
+          $.get("{{ url('game/demo/kill') }}");
+          localStorage.setItem('demo', 'off');
+          demogame();
+        }
+      }, timeOnScreen*1000);
+
+      // Surveillance des interactions du joueur
+      window.setInterval(function(){
+        if (localStorage.getItem('demo') === 'on') {
+          checkPlayer();
+        }          
+        if (localStorage.getItem('watchGamepad') === 'on') {
+          $.get("{{ url('game/demo/player') }}", function(response){
+            if (response.demo === 'gamepad_quit') {
+              var withDemoOff = 'yes';
+              quitGamepad(withDemoOff);
+            } 
+          });                
+        }                
+      }, 10000);      
+    }
+
+
+    // En mode démo on check régulièrement si le joueur a pris la main, pour arrêter le mode démo le cas échéant
+    function checkPlayer() {
+        $.ajax({
+            url : '{{ url("game/demo/player") }}',
+            type: 'get',
+            dataType: 'json',
+
+            success: function(response) {
+              if (response.demo === false) {
+                localStorage.setItem('demo', 'off');
+                localStorage.setItem('watchGamepad', 'on');
+              }
+              if (response.demo === 'gamepad_skip') {
+                actionQuit();
+                $.get("{{ url('/action') }}/QUIT");
+                $.get("{{ url('game/demo/kill') }}");
+                demogame();
+              }              
+              if (response.demo === 'gamepad_quit') {
+                var withDemoOff = 'yes';
+                quitGamepad(withDemoOff);
+              }                             
+            }
+         });
+    }
+
+
+    // Si pas déjà un jeu en cours, on va faire un check
+    function goCheckGame() {
+      if (localStorage.getItem("status") === 'off') {
+        checkgame();
+      }      
+    }
+
+    function quitGamepad(withDemoOff) {
+      actionQuit(withDemoOff);
+      $.get("{{ url('/action') }}/QUIT");
+      localStorage.setItem('demo', 'off');
+      localStorage.setItem('watchGamepad', 'off');      
+    }
+
+    // Actions quand on quitte un jeu
+    function actionQuit(withDemoOff) {
+      $('#actions').addClass('hide');
+      $('#game').addClass('hide');
+      $('#check').removeClass('hide');
+      var status = 'off';
+      localStorage.setItem("status", status);
+      var demoStatus = localStorage.getItem('demo');
+      if (demoStatus == 'on') {
+          localStorage.setItem('demo', status);
+          if (withDemoOff == 'yes') {
+            $.get("{{ url('game/demo/kill') }}");
+            $.get("{{ url('game/demo/off') }}");
+            localStorage.setItem('watchGamepad', 'off');
+          }
+      }
+            
+    };
 
 
     // Refresh auto - Defaut : toutes les 10 secondes
-    var refresh = '{{ $refresh }}';
-    var refresh_delay = '{{ $refresh_delay }}';
+    var refresh = {{ $refresh }};
+    var refresh_delay = {{ $refresh_delay }};
     if ( refresh == '1' ) {
       window.setInterval(function(){
-        if (localStorage.getItem("status") === 'off') {
-          checkgame();
-        } 
-      }, refresh_delay);
+          goCheckGame();
+      }, refresh_delay*1000);
     }
+
+    // Boutons d'actions
+    $(".action").click(function(){
+      var id = $(this).attr('id');
+      if (id === 'QUIT') {
+        var demoStatus = localStorage.getItem('demo');
+        if (demoStatus == 'on') {
+          var withDemoOff = 'yes';
+        } else {
+          var withDemoOff = 'no';
+        }
+        actionQuit(withDemoOff);
+      }
+      $.get("{{ url('/action') }}/"+id);
+    });
         
     // Forcer le check de jeu
     $(".checkgame").click(function(){
