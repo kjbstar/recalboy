@@ -25,7 +25,7 @@ class GameController extends BaseController
     		}
     	}
 		
-		if (is_null($this->output)) {
+		if (is_null($this->output) || !array_key_exists('status', $this->output)) {
 			$this->output = array("status" => "off");
 		}
 
