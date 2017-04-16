@@ -50,12 +50,12 @@ class Configuration extends Model
         });
 
         // Déjà activé ? Rien à faire.
-        if (trim(self::$output) === 'true') {
+        if (trim(self::$output) == 'true') {
             return trim(self::$output);
         }
 
         // Pas activé ? Activons le !
-        elseif (trim(self::$output) === 'false') {
+        elseif (trim(self::$output) == 'false') {
             \SSH::run('sed -i "s/\('.$param.' *= *\).*/\1\"true\"/" '.$config);
             return 'RetroArch Network Commands have been activated !';
         }
