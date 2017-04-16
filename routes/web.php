@@ -23,25 +23,18 @@ $app->group(['prefix' => 'action'], function($app)
 
 $app->group(['prefix' => 'game'], function($app)
 {
-    $app->get('check','GameController@check');
-});
-
-$app->group(['prefix' => 'game'], function($app)
-{
     $app->get('demo/launch','DemoController@launch');
-});
-
-$app->group(['prefix' => 'game'], function($app)
-{
+    $app->get('check','GameController@check');
     $app->get('demo/off','DemoController@off');
-});
-
-$app->group(['prefix' => 'game'], function($app)
-{
     $app->get('demo/kill','DemoController@kill');
-});
-
-$app->group(['prefix' => 'game'], function($app)
-{
     $app->get('demo/player','DemoController@checkPlayer');
 });
+
+$app->group(['prefix' => 'config'], function($app)
+{
+    $app->get('check/retroarch/networkcommands', function() {
+    	$config = App\Models\Recalbox\Configuration::enableRetroarchNetworkCommands();
+    	return $config;
+    });
+});
+
