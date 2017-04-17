@@ -49,7 +49,6 @@ class DemoController extends BaseController
     	// Commandes
     	//$commande_esoff = '/etc/init.d/S31emulationstation stop';
     	$commande_esoff = 'killall -9 emulationstation';
-    	$commande_eson = '/etc/init.d/S31emulationstation start';
     	$commande_startgame = 'python /usr/lib/python2.7/site-packages/configgen/emulatorlauncher.pyc '.$emuLauncherGamePadsParams.' -rom "'.$fullgamepath.'" -system "'.$system.'"';
     	$commande_listeninputs = 'cd /tmp && evtest '.Cache::get('devicePathPlayerOne').' > inputs.log &';
 
@@ -133,13 +132,12 @@ class DemoController extends BaseController
 
     public function off() {
 
-    	//$commande = '/etc/init.d/S31emulationstation start &';
+    	//$commande = '/etc/init.d/S31emulationstation start';
     	// Pour une raison qui m'échappe, la commande s'arrête au bout de 3/4 secondes et ES ne termine pas son démarrage (?!)
     	// Du coup je prend la commande complète, en 2 fois, au lieu du script S31... Là ca marche (!?)
-
     	// System language : pas besoin de la commande python pour ca, je vais direct aller le lire
     	$language = Config::getValue('system.language');
-    	$commande = 'HOME=/recalbox/share/system LC_ALL=\"'.$language.'.UTF-8\" SDL_VIDEO_GL_DRIVER=/usr/lib/libGLESv2.so SDL_NOMOUSE=1 /usr/bin/emulationstation; [ -f /tmp/shutdown.please ] && (shutdown -h now);[ -f /tmp/reboot.please ] && (shutdown -r now) &';
+    	$commande = 'HOME=/recalbox/share/system LC_ALL="'.$language.'.UTF-8" SDL_VIDEO_GL_DRIVER=/usr/lib/libGLESv2.so SDL_NOMOUSE=1 /usr/bin/emulationstation; [ -f /tmp/shutdown.please ] && (shutdown -h now);[ -f /tmp/reboot.please ] && (shutdown -r now) &';
 
     	// On tue evtest
 		self::kill();
