@@ -31,7 +31,10 @@ See **Requirements** and **Easy Install Wizard** blow, after **Demo & screenshot
 
 
 # Demo & screenshots
-You can watch a demo of an early version [on Youtube](<https://youtu.be/k_k3ho4qGwg>).
+
+Watch a demo of v0.2.0 on [on Youtube](<https://youtu.be/53zNutFFCbk>).
+
+You can watch a demo of an early version [here](<https://youtu.be/k_k3ho4qGwg>).
 
 Screenshots of release [0.1.2](<https://github.com/kjbstar/recalboy/releases/tag/v0.1.2>) with "micro" theme, on my 2.8" piTFT screen:
 
