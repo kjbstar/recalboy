@@ -26,7 +26,7 @@ echo ""
 echo "${MAGENTA}############################"
 echo "PART 1 : Server requirements"
 echo "############################${RESET}"
-echo "${GREEN}We will now install, if necessary, Apache 2, PHP 5, Curl, Memcached, Unzip, and Git${RESET}"
+echo "${GREEN}We will now install, if necessary, Apache 2, PHP 5, Curl, Memcached, and Unzip${RESET}"
 read -p "${RED}Are you ready to proceed ?${RESET} [$ANSWER_DEFAULT/N]: " START_WIZARD
 START_WIZARD="${START_WIZARD:-$ANSWER_DEFAULT}"
 echo ""
@@ -36,7 +36,7 @@ if [[ $START_WIZARD =~ ^([yY][eE][sS]|[yY])+$ ]] ; then
 	sudo apt-get update
 	echo ""
 	echo ""
-	sudo apt-get install apache2 php5 php5-curl curl php5-memcached memcached git unzip
+	sudo apt-get install apache2 php5 php5-curl curl php5-memcached memcached unzip
 	echo ""
 	echo ""
 	a2enmod rewrite
@@ -201,9 +201,6 @@ if [[ $INSTALL_RECALBOY =~ ^([yY][eE][sS]|[yY])+$ ]] ; then
 	echo "${YELLOW}Launching Installation of Recalboy. It may take some time, so please be patient${RESET}"
 	composer install -d ${RECALBOY_DEFAULT_PATH}
 	composer update -d ${RECALBOY_DEFAULT_PATH} --no-scripts
-	mkdir ${RECALBOY_DEFAULT_PATH}/storage/framework && chmod 777 ${RECALBOY_DEFAULT_PATH}/storage/framework
-	mkdir ${RECALBOY_DEFAULT_PATH}/storage/framework/cache && chmod 777 ${RECALBOY_DEFAULT_PATH}/storage/framework/cache
-	mkdir ${RECALBOY_DEFAULT_PATH}/storage/framework/views && chmod 777 ${RECALBOY_DEFAULT_PATH}/storage/framework/views
 	echo ""
 	echo ""
 	echo ""
@@ -224,4 +221,11 @@ echo "${GREEN}All done ! You can now use Recalboy.${RESET}"
 echo "http://${IP}"
 echo "${GREEN}or${RESET}"
 echo "http://recalboy.local"
+echo ""
+echo "${GREEN}Configuration URL is here:${RESET}"
+echo "http://${IP}/config/recalboy"
+echo "${GREEN}or here:${RESET}"
+echo "http://recalboy.local/config/recalboy"
+echo ""
+echo "${GREEN}Useful to setup Demo Mode, Upload, etc...${RESET}"
 echo ""
