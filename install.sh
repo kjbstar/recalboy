@@ -3,7 +3,7 @@
 # kjbstar - https://github.com/kjbstar/recalboy
 # Create Apache vhost from : https://github.com/RoverWire/virtualhost/blob/master/virtualhost.sh
 
-LATEST_RELEASE="0.1.2"
+LATEST_RELEASE="v0.2.0"
 IP="$(hostname -I)"
 ANSWER_DEFAULT="y"
 RECALBOY_DEFAULT_PATH="/var/www/html"
@@ -214,7 +214,7 @@ if [[ $INSTALL_RECALBOY =~ ^([yY][eE][sS]|[yY])+$ ]] ; then
 	echo "."
 	echo "."
 	echo "."
-	echo "${MAGENTA}Launching Installation of Recalboy. It may take some time, so please be patient${RESET}"
+	echo "${MAGENTA}Launching Installation of Recalboy. It may take some time, so please be patient.${RESET}"
 	echo "."
 	echo "."
 	echo "."
