@@ -26,7 +26,7 @@ echo ""
 echo "${MAGENTA}############################"
 echo "PART 1 : Server requirements"
 echo "############################${RESET}"
-echo "${GREEN}We will now install, if necessary, Apache 2, PHP 5, Curl, Memcached, and Unzip${RESET}"
+echo "${GREEN}We will now install, if necessary, Apache 2, PHP, Curl, Unzip, and php-mbstring, php-xml, for PHP 7 compatibility${RESET}"
 read -p "${RED}Are you ready to proceed ?${RESET} [$ANSWER_DEFAULT/N]: " START_WIZARD
 START_WIZARD="${START_WIZARD:-$ANSWER_DEFAULT}"
 echo ""
@@ -36,7 +36,13 @@ if [[ $START_WIZARD =~ ^([yY][eE][sS]|[yY])+$ ]] ; then
 	sudo apt-get update
 	echo ""
 	echo ""
-	sudo apt-get install apache2 php5 php5-curl curl unzip
+	read -p "${RED}Are you on Ubuntu ? (PHP 7)${RESET} ${YELLOW}Raspbian, Debian: answer No${RESET} [$ANSWER_DEFAULT/N]: " UBUNTU
+	UBUNTU="${UBUNTU:-$ANSWER_DEFAULT}"
+	if [[ $UBUNTU =~ ^([yY][eE][sS]|[yY])+$ ]] ; then
+		sudo apt-get install apache2 php php-curl php-mbstring php-xml curl unzip
+	else
+		sudo apt-get install apache2 php5 php5-curl curl unzip
+	fi
 	echo ""
 	echo ""
 	a2enmod rewrite
@@ -153,6 +159,10 @@ INSTALL_COMPOSER="${INSTALL_COMPOSER:-$ANSWER_DEFAULT}"
 
 if [[ $INSTALL_COMPOSER =~ ^([yY][eE][sS]|[yY])+$ ]] ; then
 	
+	EXPECTED_SIGNATURE=$(wget -q -O - https://composer.github.io/installer.sig)
+	php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+	ACTUAL_SIGNATURE=$(php -r "echo hash_file('SHA384', 'composer-setup.php');")
+
 	if [ "$EXPECTED_SIGNATURE" != "$ACTUAL_SIGNATURE" ]
 	then
 	    >&2 echo 'ERROR: Invalid installer signature'
@@ -205,6 +215,9 @@ if [[ $INSTALL_RECALBOY =~ ^([yY][eE][sS]|[yY])+$ ]] ; then
 	echo "."
 	echo "."
 	echo "${YELLOW}Launching Installation of Recalboy. It may take some time, so please be patient${RESET}"
+	echo "."
+	echo "."
+	echo "."
 	composer install -d ${RECALBOY_DEFAULT_PATH}
 	composer update -d ${RECALBOY_DEFAULT_PATH} --no-scripts
 	echo ""
