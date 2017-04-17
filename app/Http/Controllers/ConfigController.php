@@ -35,7 +35,7 @@ class ConfigController extends BaseController
 		$cmd = shell_exec('echo "'.$config_old.'" > '.storage_path('app/public/backups/'.$backup_filename));
 
 		$config = $request->input('config');
-		$cmd = shell_exec('echo "'.$config.'" > '.base_path('.env'));
+		$cmd = shell_exec('echo "'.trim($config).'" > '.base_path('.env'));
 
 		return self::index();
     	
