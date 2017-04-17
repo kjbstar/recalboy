@@ -37,11 +37,11 @@
 @section('contenu')
 
   <main id="main" role="main" class="mam pas">
-    <h1>History of configuration file</h1>
+    <h1>History of configuration file<br /> <span style="font-size:12px;font-weight:normal;margin:0"><a href="/config/recalboy" class="code">Click here</a> to go back to Configuration page.</span></h1>
     <div class="grid" id="intro">
       <p>Backups of your <span class="code">.env</span> file.<br />
       Useful if you made weird things or if you lost your settings after an update.<br />
-      <a href="/config/recalboy" class="code">Click here</a> to go back to Configuration page.
+      Click on <span class="code">Rollback</span> to immediately restore a configuration.
       </p>
     </div>
     <div class="grid has-gutter" id="formulaire">
