@@ -37,6 +37,16 @@ return [
             'agent'     => getenv('RECALBOX_AGENT'),
             'timeout'   => getenv('RECALBOX_TIMEOUT'),
         ],
+        'recalbox_long' => [
+            'host'      => getenv('RECALBOX_IP'),
+            'username'  => getenv('RECALBOX_LOGIN'),
+            'password'  => getenv('RECALBOX_PASS'),
+            'key'       => getenv('RECALBOX_KEY'),
+            'keytext'   => getenv('RECALBOX_KEYTEXT'),
+            'keyphrase' => getenv('RECALBOX_KEYPHRASE'),
+            'agent'     => getenv('RECALBOX_AGENT'),
+            'timeout'   => 60,
+        ],        
     ],
 
     /*
