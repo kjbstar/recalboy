@@ -39,7 +39,8 @@ $(document).ready(function(){
                 localStorage.setItem("status", status);
 
                 var htmlrender = response.html;
-                var core = response.core
+                var core = response.core;
+                $('#game').removeClass('hide');
                 $('#game').fadeIn('slow', function() {
                     $('#check').addClass('hide');
                     if (core === 'retroarch'){
