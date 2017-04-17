@@ -2,7 +2,7 @@
 
 Recalboy is your "1-click" companion for [Recalbox](http://www.recalbox.com) and is powered by the micro-framework [Lumen](http://lumen.laravel.com).
 
-I made it for a personal project, to provide a (very) little second screen for an arcade cabinet, to get access to main features of Retroarch in a breeze. 
+I made it for a personal project, to provide a [little second screen](![](public/assets/img/readme/gba_recalboy.png)) for an arcade cabinet, to get access to main features of Retroarch in a breeze. 
 
 * Save
 * Load last save state
@@ -11,124 +11,113 @@ I made it for a personal project, to provide a (very) little second screen for a
 * Reset game
 * Exit game
 
-# Demo & screenshots
+Since v0.2.0, there's a perfect tool for your arcade cab': **Demo Mode** 
 
+* Launch randomly a game from the systems of your choice.
+* Every X minutes, another game is launched.
+* You want to play to what you see? No problem: just start to play, Demo mode will turn off.
+* You don't like what you see? Press Hotkey to skip and launch another game.
+
+**Demo Mode** is perfect to discover games from your collection, or just to let your Recalbox powered arcade cabinet turned on, to display demos like a true arcade cabinet!
+
+----------
+# How to install ?
+
+See **Requirements** and **Easy Install Wizard** blow, after **Demo & screenshots** section.
+
+----------
+
+
+# Demo & screenshots
 You can watch a demo of an early version [on Youtube](<https://youtu.be/k_k3ho4qGwg>).
 
 Screenshots of release [0.1.2](<https://github.com/kjbstar/recalboy/releases/tag/v0.1.2>) with "micro" theme, on my 2.8" piTFT screen:
 
 ### Default view, waiting for a game
-![](public/assets/img/pitft_default.png)
+![](public/assets/img/readme/pitft_default.png)
 
 ### Game detected !
-![](public/assets/img/pitft_game.png)
+![](public/assets/img/readme/pitft_game.png)
 
 Click on the upper-right arrow to instantly scroll to actions buttons.
 ### Four of the six actions buttons
-![](public/assets/img/pitft_actions.png)
+![](public/assets/img/readme/pitft_actions.png)
 
 Reset and Exit buttons are under these buttons, to avoid to press them by mistake :)
 
+----------
 
 # Requirements
 
-You must have a local server (Raspbian, or any Unix operating system) with Apache and PHP 5.6.4 minimum, and Composer.
+* A local server (on a Raspberry with Raspbian, for example).
+* Or a Virtual Machine with Debian or Ubuntu.
+* Any modern browser on client side (Chrome, Chromium, Firefox...)
+
 My installation is done on a Raspberry Pi Zero. In this case, I suggest you to temporary increase swap memory to avoid any memory issue during installation. [Read more](http://raspberrypi.stackexchange.com/questions/70/how-to-set-up-swap-space).
 
-Other requirements:
-* Curl (php5-curl)
-* Memcached (optional)
+You can install on another OS, but Recalboy has been tested only on Debian 8, Ubuntu Server 17.04, and Raspbian. You may have to do manual install on another OS.
 
-You can use this [nice tutorial](https://raspbian-france.fr/installer-serveur-web-raspberry/) (in french) to install Apache and PHP.
+> Virtual Machine users : I suggest you to configure your network on Bridge Access, so that your VM will get its own local IP. Just select "Bridged Adapter" in [Network configuration](public/assets/img/readme/bridged_network.png) (4th choice).
 
-Wamp users: not sure if Recalboy will work, as there's one symbolic link and Windows doesn't handle them.
-Virtual Machine users : I suggest you to configure your network on Bridge Access, so that your VM will get its own local IP.
+# Easy Install Wizard
 
-# Setup Apache
+Recalboy is very simple to install.
 
-I suggest you to install Recalboy as default website for Apache, if you're not comfortable with web hosting.
+* Connect to the machine where you will install Recalboy through `ssh`
+* Then enter the following command, to download and execute the Install file.
 
-* Edit `/etc/apache2/sites-enabled/000-default.conf` this way:
-
-```bash
-<VirtualHost *:80>
-        # The ServerName directive sets the request scheme, hostname and port that
-        # the server uses to identify itself. This is used when creating
-        # redirection URLs. In the context of virtual hosts, the ServerName
-        # specifies what hostname must appear in the request's Host: header to
-        # match this virtual host. For the default virtual host (this file) this
-        # value is not decisive as it is used as a last resort host regardless.
-        # However, you must set it for any further virtual host explicitly.
-        ServerName recalboy.local
-
-        ServerAdmin your@email.com
-        DocumentRoot /var/www/html/public
-
-        <Directory "/var/www/html/public">
-                AllowOverride All
-                Order allow,deny
-                Allow from all
-                Options FollowSymLinks
-        </Directory>
-
-        # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
-        # error, crit, alert, emerg.
-        # It is also possible to configure the loglevel for particular
-        # modules, e.g.
-        #LogLevel info ssl:warn
-
-        ErrorLog ${APACHE_LOG_DIR}/recalboy.error.log
-        CustomLog ${APACHE_LOG_DIR}/recalboy.access.log combined
-
-        # For most configuration files from conf-available/, which are
-        # enabled or disabled at a global level, it is possible to
-        # include a line for only one particular virtual host. For example the
-        # following line enables the CGI configuration for this host only
-        # after it has been globally disabled with "a2disconf".
-        #Include conf-available/serve-cgi-bin.conf
-</VirtualHost>
 ```
-* Restart Apache `sudo service apache2 restart`
-* Activate url rewriting if necessary `sudo a2enmod rewrite`.
+wget https://raw.githubusercontent.com/kjbstar/recalboy/master/install.sh && chmod +x install.sh && sudo ./install.sh
+```
+> Yes, you have to execute this command with `sudo`.
+> You can check the file by yourself, there's nothing dangerous :)
+
+The Wizard will guide you through 4 steps:
+
+ 1. Install requirements: mainly Apache 2 and PHP
+ 2. Virtual Host setup
+ 3. Composer install
+ 4. Recalboy install
+
+On a freshly installed OS, or if you don't know what to answer, you would answer all questions just by pressing `Enter` key on your keyboard. Be careful: the last question expect you to enter your Recalbox's IP :)
+
+> **Advanced users**: please note that the Wizard will stop if you choose to customize the path of Recalboy's VirtualHost. Manual install is still possible, though.
 
 
-# Installation
-
-Well, this process is not tested, but it should work :')
-
-* Get [Composer](https://getcomposer.org/download/)
-* Optional : move it to /usr/local/bin (to use it as "composer" form anywhere in your machine)
-* Go to `/var/www` (or anywhere else where you want to install it)
-* [Download](https://github.com/kjbstar/recalboy/releases) latest release.
-* Change name of unzipped folder to `www` and `cd` into it.
-* Run `composer install`.
-
-Bravo ! Recalboy is now installed, you should be able to access it on you server's local IP, or with the `ServerName` value you have set in `000-default.conf`, if you modify the `hosts` file of your client machine. But access by IP is fine :)
+Bravo ! Recalboy is now installed, you should be able to access it by your server's local IP (usually `http://192.168.0.X`, or by `http://recalboy.local` if you modify the `hosts` file of your client machine. But access by IP is fine :)
 
 
 # Configuration
 
-Now setup your Recalbox IP in `.env` file, line 15.
-That's it ! The most common values of a classic Recalbox installation are already set.
+Please first visit `http://recalboy.local/config/recalboy` to finish configuration.
+It's not mandatory, but higly advised if you plan to use Demo Mode :)
 
-## IMPORTANT
-You **MUST** activate network commands in Retroarch to make Recalboy working with your Recalbox.
-To do so, enable network commands in the Retroarch settings menu, or ensure that network_cmd_enable = "true" is set in retroarch.cfg.
+> Don't fear to make a mistake in configuration file: a backup is made each time you save from this page. There's a link to access the History, and you can Rollback in 1 click.
 
-### REQUIRED CONFIGURATION TO SET IN .env file
+### About Retroarch's Networks Commands
+
+They **MUST** be activated to make Recalboy working with your Recalbox.
+
+**Don't worry, the Easy Install Wizard has already activated them.**
+If you have any doubts, you can open:
+`http://recalboy.local/config/check/retroarch/networkcommands`
+in your browser.
+
+> **Advanced users: do you have any custom retroarch configurations ?** Then you must enable network commands in the Retroarch settings menu, or ensure that `network_cmd_enable = "true"` is set in your custom config file.
+
 #### Recalbox configuration : IP, SSH login and password
-`RECALBOX_IP` - set here your Recalbox local IP.
+`RECALBOX_IP` - put here your Recalbox local IP. IF you have run the Easy Install Wizard, it is already set.
 
 `RECALBOX_LOGIN` and `RECALBOX_LOGIN` are already set with default Recalbox values for SSH access.
 
-### OPTIONAL CONFIGURATION FROM .env FILE
-#### Recalboy can check by himself if a game is running, or you can click on Recalboy logo to check by yourself
+#### Main Recalboy configuration: auto check if a game is running, or manual check by clicking the logo
 `REFRESH_AUTO` - Available values: `1` or `0` - Default: `1` (enabled)
 
-`REFRESH_DELAY` - Default: `10000` (check every 10 seconds)
+`REFRESH_DELAY` - Default: `10` (check every 10 seconds)
 
-`RECALBOX_ROMS_PATH` - Default: `/recalbox/share/roms`
+`THEME` - Default: `classic`
 
+#### Configure Screenshots upload
 `UPLOAD_SCREENSHOTS` - Default: `0` (disabled, set `1` to enable)
 
 `UPLOAD_METHOD` - Set here your favorite storage solution to upload automatically your screenshots. Available methods: `Amazon S3`, `Google Drive`, `Dropbox` (64-bits architecture only, not fully tested).
@@ -139,15 +128,35 @@ To do so, enable network commands in the Retroarch settings menu, or ensure that
 
 You then have options to set the keys of your storage solution.
 
+#### Configure Demo Mode
+`DEMO_SYSTEMS` - Put here the Systems you want to see when using Demo Mode. Recalboy will randomly pick a game from on of these systems. Example: `mame,snes,n64`.  Default: `nes` 
 
-# TODO
-* <strike>Improve the layout when I'll get my PiTFT screen :)</strike> --> DONE
-* <strike>Maybe a templating system to easily choose another layout</strike> --> DONE
-* Add more informations from running games, to get something less basic.
-* Arcade games : finding, adding, and managing the display of instructions card / move lists, to never forget how to make a Hadoken :) --> WORK IN PROGRESS
+`DEMO_VOLDOWN` - Volume when a game is running in Demo Mode.  Default: `0` 
 
-# Limitations
+`DEMO_VOLUP` - Volume when you exit Demo Mode.  Default: `90` 
+
+`DEMO_DURATION` - Running time of each game in Demo Mode, in seconds.  Default: `300` 
+
+----------
+
+# How to use Recalboy ?
+
+Just open it in your browser :)
+
+To launch Demo Mode, click on the upper-right `"Play" icon`.
+To skip a game during Demo Mode, press `Hotkey` button.
+To quit Demo Mode, press `Hotkey` button or click on Recaloby's `Exit` icon.
+Demo mode can detect if you start to play a game and stop by itself. Yes.
+
+If there's any problem, just refresh your page.
+
+> **Note**: It's better if you have scraped your games :)
+
+----------
+
+# Known Limitations
 Sadly, as Recalboy use Retroarch Network Commands, keep in mind that the following systems are (still) not supported :
+
 * Dosbox
 * Pifba
 * Kodi (obviously!)
@@ -161,5 +170,21 @@ Sadly, as Recalboy use Retroarch Network Commands, keep in mind that the followi
 * Dolphin
 * AdvanceMame
 
+Other limitations:
+
+* In Demo Mode, launching a new game may be a bit slow, up to 40 seconds for first launch on my Raspberry Pi Zero.
+* Don't use to lower values for `DEMO_DURATION` and `REFRESH_DELAY`. It may causes weird behaviors in Demo Mode.
+* **Known issue**: After using Demo Mode, you can launch a game with ES only 1 time. After, games exit with exit code 13, so you have to reboot Recalbox. It's weird, I don't understand why...
+* **Known issue**: The volume is not muted in Demo Mode.
+* **Known issue**: Screenshot uploads the Gamelist. I think it come from Recalbox, as I had no problem in 4.0.1, and 4.0.2.
+
+# TODO
+
+* Add more informations from running games, to get something less basic.
+* Re-arrange Classic and Mini themes.
+* Demo mode: find a better way to handle Emulation Station off/on.
+* Arcade games : finding, adding, and managing the display of instructions card / move lists, to never forget how to make a Hadoken :) 
+
 ## License
-Well, Recalboy is open source. Feel free to fork it and improve it. Keep in mind I don't consider myself as a developer, so don't be too rough with my code :)
+Recalboy is open-sourced software licensed under the MIT license.
+Feel free to fork it and improve it. Keep in mind I don't consider myself as a developer, so don't be too rough with my code :)
