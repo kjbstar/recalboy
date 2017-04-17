@@ -38,7 +38,11 @@
         ],
         "post-install-cmd": [
             "mv .env.example .env",
+            "chmod 777 .env"
             "mkdir $(pwd)/storage",
+            "mkdir $(pwd)/storage/framework && chmod 777 $(pwd)/storage/framework",
+            "mkdir $(pwd)/storage/framework/cache && chmod 777 $(pwd)/storage/framework/cache",
+            "mkdir $(pwd)/storage/framework/views && chmod 777 $(pwd)/storage/framework/views",
             "mkdir $(pwd)/storage/app",
             "mkdir $(pwd)/storage/app/public && chmod -R 777 storage",
             "ln -s $(pwd)/storage/app/public $(pwd)/public/storage"
