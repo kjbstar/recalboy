@@ -28,6 +28,14 @@ $app->group(['prefix' => 'game'], function($app)
     $app->get('demo/off','DemoController@off');
     $app->get('demo/kill','DemoController@kill');
     $app->get('demo/player','DemoController@checkPlayer');
+    $app->get('demo/voldown', function() {
+        $config = App\Models\Recalbox\Configuration::setValue('audio.volume', getenv('DEMO_VOLDOWN'));
+        return $config;
+    });
+    $app->get('demo/volup', function() {
+        $config = App\Models\Recalbox\Configuration::setValue('audio.volume', getenv('DEMO_VOLUP'));
+        return $config;
+    });        
 });
 
 $app->group(['prefix' => 'config'], function($app)

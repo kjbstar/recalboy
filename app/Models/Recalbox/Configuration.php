@@ -15,6 +15,10 @@ class Configuration extends Model
             $config = '/recalbox/share/system/recalbox.conf';
         }        
 
+        if ($param == 'audio.volume') {
+            self::setVolume($value);
+        }
+
         \SSH::run('sed -i "s/\('.$param.' *= *\).*/\1'.$value.'/" /recalbox/share/system/recalbox.conf');
             
     }
@@ -32,6 +36,12 @@ class Configuration extends Model
         return trim(self::$output);
 
     }    
+
+    public static function setVolume($value) {
+
+        \SSH::run('amixer set PCM '.$value.'%');
+            
+    }
 
     // Une fonction à part pour couvrir les cas les plus courants...
     public static function enableRetroarchNetworkCommands($param = null, $config = null) {
