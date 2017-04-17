@@ -174,7 +174,8 @@ $(document).ready(function(){
       var status = 'off';
       localStorage.setItem("status", status);
       var demoStatus = localStorage.getItem('demo');
-      if (demoStatus == 'on') {
+      var watchStatus = localStorage.getItem('watchGamepad');
+      if (demoStatus == 'on' || watchStatus == 'on') {
           localStorage.setItem('demo', status);
           if (withDemoOff == 'yes') {
             $.get("{{ url('game/demo/kill') }}");
@@ -200,11 +201,15 @@ $(document).ready(function(){
       var id = $(this).attr('id');
       if (id === 'QUIT') {
         var demoStatus = localStorage.getItem('demo');
+        var watchStatus = localStorage.getItem('watchGamepad');
         if (demoStatus == 'on') {
           var withDemoOff = 'yes';
         } else {
           var withDemoOff = 'no';
         }
+        if (watchStatus == 'on') {
+          var withDemoOff = 'yes';
+        }        
         actionQuit(withDemoOff);
       }
       $.get("{{ url('/action') }}/"+id);
