@@ -2,7 +2,7 @@
 
 Recalboy is your "1-click" companion for [Recalbox](http://www.recalbox.com) and is powered by the micro-framework [Lumen](http://lumen.laravel.com).
 
-I made it for a personal project, to provide a [little second screen](![](public/assets/img/readme/gba_recalboy.png)) for an arcade cabinet, to get access to main features of Retroarch in a breeze. 
+I made it for a personal project, to provide a [little second screen](public/assets/img/readme/gba_recalboy.png) for an arcade cabinet, to get access to main features of Retroarch in a breeze. 
 
 * Save
 * Load last save state
@@ -174,7 +174,7 @@ Other limitations:
 
 * In Demo Mode, launching a new game may be a bit slow, up to 40 seconds for first launch on my Raspberry Pi Zero.
 * Don't use to lower values for `DEMO_DURATION` and `REFRESH_DELAY`. It may causes weird behaviors in Demo Mode.
-* **Known issue**: After using Demo Mode, you can launch a game with ES only 1 time. After, games exit with exit code 13, so you have to reboot Recalbox. It's weird, I don't understand why...
+* **Known issue**: After using Demo Mode, you can launch a game with ES only 1 time. After, games exit with exit code 13, so you have to reboot Recalbox (or re-launch Demo mode). It's weird, I don't understand why...
 * **Known issue**: The volume is not muted in Demo Mode.
 * **Known issue**: Screenshot uploads the Gamelist. I think it come from Recalbox, as I had no problem in 4.0.1, and 4.0.2.
 
