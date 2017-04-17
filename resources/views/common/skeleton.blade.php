@@ -8,6 +8,8 @@
     @section('css')
     <link rel="stylesheet" href="{{public_path('assets/css/knacss.css')}}" media="all">
     <link rel="stylesheet" href="{{public_path('assets/css/styles.css')}}" media="all">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <style type="text/css">
     @font-face {
       font-family: 'Material Icons';
