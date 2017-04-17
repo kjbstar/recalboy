@@ -20,6 +20,17 @@
   border-radius: 3px;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
 }
+.button{
+  border:none;
+  outline:none;
+  background:none;
+  cursor:pointer;
+  background-color: rgba(27,31,35,0.05);
+  padding:0;
+  text-decoration:underline;
+  font-family:inherit;
+  font-size:12px;
+}
 </style>
 @stop
 
@@ -37,7 +48,7 @@
       @if ($backups === true)
         <ul>
           @foreach ($files as $file)
-          <li><a href="/storage/backups/{{ $file['filename'] }}.txt" target="_blank">{{ $file['filename'] }}</a></li>
+          <form action="/config/recalboy" method="post"><li><a href="/storage/backups/{{ $file['filename'] }}.txt" target="_blank">{{ $file['filename'] }}</a> | <input type="hidden" name="rollback" value="{{ $file['filename'] }}.txt"><input type="submit" value="Rollback" class="button code"></li></form>
           @endforeach
         </ul>
       @else

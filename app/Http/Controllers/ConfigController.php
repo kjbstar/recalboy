@@ -20,13 +20,13 @@ class ConfigController extends BaseController
     }
 
 
-    public function update(Request $request) {
+    public function update(Request $request, $rollback = null) {
 		
 		// C'est très vilain, mais je fais aucun contrôle. Bundle Forms retiré dans Lumen, et la flemme. Comme ça reste du local...
 
 		// On fait un backup quand même, juste au cas où
 		$config_old = File::get(base_path('.env'));
-		$backup_filename = 'env-'.Carbon::now().'.txt';
+		$backup_filename = 'config-'.Carbon::now().'.txt';
 		$backup_filename = preg_replace('/[[:space:]]+/', '-', $backup_filename);
 
 		if (!File::exists(storage_path('app/public/backups'))) {
@@ -34,7 +34,12 @@ class ConfigController extends BaseController
 		}
 		$cmd = shell_exec('echo "'.$config_old.'" > '.storage_path('app/public/backups/'.$backup_filename));
 
-		$config = $request->input('config');
+		// Rollback ou pas ?
+		if ($request->input('rollback')) {
+			$config = File::get(storage_path('app/public/backups/'.$request->input('rollback')));
+		} else {
+			$config = $request->input('config');			
+		}
 		$cmd = shell_exec('echo "'.trim($config).'" > '.base_path('.env'));
 
 		return self::index();
@@ -50,6 +55,7 @@ class ConfigController extends BaseController
 			foreach ($backups as $value) {
 				$files[] = pathinfo($value);
 			}
+			$files = array_reverse($files);
 			return view('history', ['backups' => true, 'files' => $files]);
 		} else {
 	    	return view('history', ['backups' => false]);

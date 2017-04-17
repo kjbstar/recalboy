@@ -58,7 +58,7 @@ textarea {
       <form action="/config/recalboy" method="post">
       <textarea cols="40" id="id_content" name="config" rows="50">{{$config }}</textarea>
       <br />
-      <center><input type="submit" value="Enregistrer" class="button"></center>
+      <center><input type="submit" value="Save" class="button"></center>
       
       </form>
     </div>
