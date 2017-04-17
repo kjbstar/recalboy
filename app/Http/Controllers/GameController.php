@@ -60,6 +60,9 @@ class GameController extends BaseController
 	    		// strpos car il peut arriver qu'on ait des sous-dossiers, or on a gardé que le nom de fichier
 	    		// Pour l'instant on part du principe que toutes les infos recherchées existent... TODO : gérer les absences d'images et les infos supplémentaires si présentes
 	    		if (strpos($gamexml->path, $game['file']) !== false) {
+                    if (!$gamexml->image) {
+                        $gamexml->image = '/aassets/img/recalboy.png';
+                    }
 	    			$gameinfos['status'] = 'on';
 	    			$gameinfos['name'] = (string)$gamexml->name;
 	    			$gameinfos['image_path'] = Files::getGameImage((string)$gamexml->image, $downloaded_images_path, $game['system']);
@@ -126,10 +129,10 @@ class GameController extends BaseController
         if ($output['status'] == 'on') {
             switch (getenv('THEME')) {
                 case 'micro':
-                    $html = '<div class="grid-2 has-gutter"><div class="mas"><img src="/storage/'.$output['image_path'].'"></div><div class="mas"><div class="grid has-gutter"><img src="'.$output['system_logo'].'"></div></div><a href="#actions" class="material-icons" id="gotoactions">arrow_downward</a></div>';
+                    $html = '<div class="grid-2 has-gutter"><div class="mas"><img src="'.$output['image_path'].'"></div><div class="mas"><div class="grid has-gutter"><img src="'.$output['system_logo'].'"></div></div><a href="#actions" class="material-icons" id="gotoactions">arrow_downward</a></div>';
                     break;
                 default:
-                    $html = '<div class="grid-2 has-gutter"><div class="mas"><img src="/storage/'.$output['image_path'].'"></div><div class="mas"><div class="grid has-gutter"><img src="'.$output['system_logo'].'"></div><table><tr><td>GAME</td><td>'.$output['name'].'</td></tr><tr><td>SYSTEM</td><td>'.$output['system'].'</td></tr></table></div></div>';
+                    $html = '<div class="grid-2 has-gutter"><div class="mas"><img src="'.$output['image_path'].'"></div><div class="mas"><div class="grid has-gutter"><img src="'.$output['system_logo'].'"></div><table><tr><td>GAME</td><td>'.$output['name'].'</td></tr><tr><td>SYSTEM</td><td>'.$output['system'].'</td></tr></table></div></div>';
                     break;
             }
             $this->output['html'] = $html;

@@ -60,7 +60,11 @@ class Files extends Model
             $fichier = \Storage::put(''.$image_path, 1);
             $local = storage_path('app/public/'.$image_path);       
             \SSH::into('recalbox')->get($remote, $local);
-            return $image_path;
+            if ($image_path == 'assets/img/recalboy.png') {
+                return $image_path;
+            } else {
+                return 'storage/'.$image_path;
+            }
         });
 
         return $cached;
