@@ -36,7 +36,7 @@ if [[ $START_WIZARD =~ ^([yY][eE][sS]|[yY])+$ ]] ; then
 	sudo apt-get update
 	echo ""
 	echo ""
-	sudo apt-get install apache2 php5 php5-curl curl php5-memcached memcached unzip
+	sudo apt-get install apache2 php5 php5-curl curl unzip
 	echo ""
 	echo ""
 	a2enmod rewrite
