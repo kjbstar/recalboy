@@ -25,6 +25,8 @@ Since v0.2.0, there's a perfect tool for your arcade cab': **Demo Mode**
 
 See **Requirements** and **Easy Install Wizard** blow, after **Demo & screenshots** section.
 
+> Note: Recalboy is **not** something you install on Recalbox.
+
 ----------
 
 
