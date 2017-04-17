@@ -32,6 +32,8 @@ $app->group(['prefix' => 'game'], function($app)
 
 $app->group(['prefix' => 'config'], function($app)
 {
+    $app->get('recalboy','ConfigController@index');
+    $app->post('recalboy','ConfigController@update');
     $app->get('check/retroarch/networkcommands', function() {
     	$config = App\Models\Recalbox\Configuration::enableRetroarchNetworkCommands();
     	return $config;
