@@ -2,9 +2,9 @@
 /storage
 /.idea
 /public/storage
+/public/assets/extras
 recalboy.sublime-project
 recalboy.sublime-workspace
 Homestead.json
 Homestead.yaml
 .env
-/public/assets/extras
