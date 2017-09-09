@@ -48,6 +48,7 @@ $app->group(['prefix' => 'config'], function($app)
     	$config = App\Models\Recalbox\Configuration::enableRetroarchNetworkCommands();
     	return $config;
     });
+    $app->get('cache/clear','ConfigController@cacheClear');
 });
 
 $app->group(['prefix' => 'backups'], function($app)

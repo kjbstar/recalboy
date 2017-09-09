@@ -11,7 +11,6 @@
 @section('js')
 @parent
 <script src="{{public_path('assets/js/filesmanager.js')}}"></script>
-
 <script type="text/javascript">
     function restoreFile(path, name) {
 
@@ -24,22 +23,17 @@
             dataType: 'json',
 
             success: function(response) {
-              //var obj = jQuery.parseJSON(response);
               alert(response.message);
             },
 
             complete: function(response) {
             }
          });     
-
       }
-
 
     };
 
-  
 </script>
-
 @stop
 
 @section('contenu')

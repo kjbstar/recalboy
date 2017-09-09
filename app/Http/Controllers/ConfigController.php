@@ -20,6 +20,16 @@ class ConfigController extends BaseController
     }
 
 
+    public function cacheClear() {
+        
+        \Cache::flush();
+
+		$data['message'] = 'Cache cleared !';
+		return response()->json($data);
+   
+    }
+
+
     public function update(Request $request, $rollback = null) {
 		
 		// C'est très vilain, mais je fais aucun contrôle. Bundle Forms retiré dans Lumen, et la flemme. Comme ça reste du local...

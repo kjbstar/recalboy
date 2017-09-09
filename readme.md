@@ -11,7 +11,15 @@ I made it for a personal project, to provide a [little second screen](public/ass
 * Reset game
 * Exit game
 
-Since v0.2.0, there's a perfect tool for your arcade cab': **Demo Mode** 
+**New in v0.3** ! You can manage backups of your saves files !
+
+* Say goodbye to corrupted saves, never lose your progress anymore !
+* Recalboy automatically backups your latest saves when you exit a game.
+* Browse and search your backups by system/game/date/hour, and restore them one by one to your Recalbox.
+* Coming soon : download your backups in 1 zip file.
+
+
+**New in v0.2** ! There's a perfect tool for your arcade cab': **Demo Mode** 
 
 * Launch randomly a game from the systems of your choice.
 * Every X minutes, another game is launched.
@@ -19,6 +27,7 @@ Since v0.2.0, there's a perfect tool for your arcade cab': **Demo Mode**
 * You don't like what you see? Press Hotkey to skip and launch another game.
 
 **Demo Mode** is perfect to discover games from your collection, or just to let your Recalbox powered arcade cabinet turned on, to display demos like a true arcade cabinet!
+
 
 ----------
 # How to install ?
@@ -155,7 +164,7 @@ Demo mode can detect if you start to play a game and stop by itself. Yes.
 
 If there's any problem, just refresh your page.
 
-> **Note**: It's better if you have scraped your games :)
+> **Note**: It only works with scraped games :)
 
 ----------
 
@@ -180,8 +189,6 @@ Other limitations:
 * In Demo Mode, launching a new game may be a bit slow, up to 40 seconds for first launch on my Raspberry Pi Zero.
 * Don't use to lower values for `DEMO_DURATION` and `REFRESH_DELAY`. It may causes weird behaviors in Demo Mode.
 * **Known issue**: After using Demo Mode, you can launch a game with ES only 1 time. After, games exit with exit code 13, so you have to reboot Recalbox (or re-launch Demo mode). It's weird, I don't understand why...
-* **Known issue**: The volume is not muted in Demo Mode.
-* **Known issue**: Screenshot uploads the Gamelist. I think it come from Recalbox, as I had no problem in 4.0.1, and 4.0.2.
 
 # TODO
 

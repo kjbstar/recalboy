@@ -3,7 +3,7 @@
 # kjbstar - https://github.com/kjbstar/recalboy
 # Create Apache vhost from : https://github.com/RoverWire/virtualhost/blob/master/virtualhost.sh
 
-LATEST_RELEASE="0.2.0.1"
+LATEST_RELEASE="0.3"
 IP="$(hostname -I)"
 ANSWER_DEFAULT="y"
 RECALBOY_DEFAULT_PATH="/var/www/html"
@@ -230,6 +230,11 @@ if [[ $INSTALL_RECALBOY =~ ^([yY][eE][sS]|[yY])+$ ]] ; then
 fi
 
 echo "Last but not least, I must activate the Retroarch Network Commands on your Recalbox."
+echo "${MAGENTA}Stop this script and activate this option by yourself in Retroarch menu if your Recalbox is a fresh install"
+echo "or if you have a very customised retroarchcustom.cfg . Because this process may fail, and you would have to"
+echo "delete retroarchcustom.cfg , and let Recalbox generate a new one.${RESET} Coming soon : better management of this activation."
+echo ""
+echo ""
 read -p "Please turn on your Recalbox, and enter its IP (192.168.X.X):${RESET} " IP_RECALBOX
 
 sed -i "s/\(RECALBOX_IP *= *\).*/\1${IP_RECALBOX}/" ${RECALBOY_DEFAULT_PATH}/.env
