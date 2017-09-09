@@ -87,4 +87,51 @@ class Files extends Model
 
     }    
 
+
+    public static function getSave($remote, $system, $game, $extension, $now) {
+
+        $fichier = \Storage::put('backups/saves/'.$system.'/'.$game.'/'.$now.'/'.$game.'.'.$extension, 1);
+        $local = storage_path('app/public/backups/saves/'.$system.'/'.$game.'/'.$now.'/'.$game.'.'.$extension);       
+        \SSH::into('recalbox')->get($remote, $local);
+        return $local;
+
+    }
+
+
+    public static function remoteCheck($path) {
+
+        $result = false;
+        // Est-ce qu'on trouve le fichier recherché ?
+        \SSH::run('ls '.escapeshellarg($path), function($output) use (&$result)
+        {
+            $cherche = strstr($output, 'No such file or directory');
+            if ($cherche == true) {
+                $result = false;
+            } else { 
+                $result = true;
+            }
+        });
+
+        return $result;
+
+    }    
+
+
+    public static function compareMd5($local, $remote) {
+
+        $local_md5 = shell_exec('md5sum '.escapeshellarg($local));
+        $local_md5 = explode(' ', $local_md5);
+        $remote_md5 = '';
+
+        \SSH::run('md5sum '.escapeshellarg($remote), function($output) use (&$remote_md5) {
+            $remote_md5 = explode(' ', $output);
+            $remote_md5 = $remote_md5[0];
+        });
+
+        $md5 = array('local' => $local_md5[0], 'remote' => $remote_md5);
+
+        return $md5;
+
+    }
+
 }

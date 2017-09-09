@@ -1,6 +1,6 @@
 @extends('common/skeleton')
 
-@section('titre')RECALBOY CONFIG HISTORY
+@section('titre')CONFIG HISTORY
 @stop
 
 @section('css')
@@ -35,9 +35,11 @@
 @stop
 
 @section('contenu')
+<div class="pixelheader"></div>
+<a href="{{ app('request')->headers->get('referer') }}" class="material-icons" id="go_back">backspace</a>
 
-  <main id="main" role="main" class="mam pas">
-    <h1>History of configuration file<br /> <span style="font-size:12px;font-weight:normal;margin:0"><a href="/config/recalboy" class="code">Click here</a> to go back to Configuration page.</span></h1>
+  <main id="main" role="main" class="mam pas margin35">
+    <h1>Config file backup</h1>
     <div class="grid" id="intro">
       <p>Backups of your <span class="code">.env</span> file.<br />
       Useful if you made weird things or if you lost your settings after an update.<br />
@@ -48,7 +50,7 @@
       @if ($backups === true)
         <ul>
           @foreach ($files as $file)
-          <form action="/config/recalboy" method="post"><li><a href="/storage/backups/{{ $file['filename'] }}.txt" target="_blank">{{ $file['filename'] }}</a> | <input type="hidden" name="rollback" value="{{ $file['filename'] }}.txt"><input type="submit" value="Rollback" class="button code"></li></form>
+          <form action="/config" method="post"><li><a href="/storage/backups/config/{{ $file['filename'] }}.txt" target="_blank">{{ $file['filename'] }}</a> | <input type="hidden" name="rollback" value="{{ $file['filename'] }}.txt"><input type="submit" value="Rollback" class="button code"></li></form>
           @endforeach
         </ul>
       @else

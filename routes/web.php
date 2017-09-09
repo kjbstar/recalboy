@@ -36,16 +36,24 @@ $app->group(['prefix' => 'game'], function($app)
         $config = App\Models\Recalbox\Configuration::setValue('audio.volume', getenv('DEMO_VOLUP'));
         return $config;
     });        
+    $app->get('backup/sync/{method}/{system}/{game}','BackupController@getGameSave');
 });
 
 $app->group(['prefix' => 'config'], function($app)
 {
-    $app->get('recalboy','ConfigController@index');
-    $app->get('recalboy/history','ConfigController@history');
-    $app->post('recalboy','ConfigController@update');
+    $app->get('','ConfigController@index');
+    $app->get('history','ConfigController@history');
+    $app->post('','ConfigController@update');
     $app->get('check/retroarch/networkcommands', function() {
     	$config = App\Models\Recalbox\Configuration::enableRetroarchNetworkCommands();
     	return $config;
     });
 });
 
+$app->group(['prefix' => 'backups'], function($app)
+{
+    $app->get('','BackupController@backupsManager');
+    $app->get('games/saves','BackupController@gamesSavesManager');
+    $app->post('games/saves/restore','BackupController@restoreFile');
+    $app->get('games/saves/listing','BackupController@listGamesSaves');
+});

@@ -29,14 +29,14 @@ class ConfigController extends BaseController
 		$backup_filename = 'config-'.Carbon::now().'.txt';
 		$backup_filename = preg_replace('/[[:space:]]+/', '-', $backup_filename);
 
-		if (!File::exists(storage_path('app/public/backups'))) {
-				File::makeDirectory(storage_path('app/public/backups'));
+		if (!File::exists(storage_path('app/public/backups/config'))) {
+				File::makeDirectory(storage_path('app/public/backups/config'));
 		}
-		$cmd = shell_exec('echo "'.$config_old.'" > '.storage_path('app/public/backups/'.$backup_filename));
+		$cmd = shell_exec('echo "'.$config_old.'" > '.storage_path('app/public/backups/config/'.$backup_filename));
 
 		// Rollback ou pas ?
 		if ($request->input('rollback')) {
-			$config = File::get(storage_path('app/public/backups/'.$request->input('rollback')));
+			$config = File::get(storage_path('app/public/backups/config/'.$request->input('rollback')));
 		} else {
 			$config = $request->input('config');			
 		}
@@ -49,9 +49,9 @@ class ConfigController extends BaseController
 
     public function history() {
 		
-		if (File::exists(storage_path('app/public/backups'))) {
+		if (File::exists(storage_path('app/public/backups/config'))) {
 			$files = array();
-			$backups = File::files(storage_path('app/public/backups'));
+			$backups = File::files(storage_path('app/public/backups/config'));
 			foreach ($backups as $value) {
 				$files[] = pathinfo($value);
 			}
@@ -62,5 +62,6 @@ class ConfigController extends BaseController
 		}
     	
     }
+
 
 }

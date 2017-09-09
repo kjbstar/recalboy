@@ -183,6 +183,10 @@ $(document).ready(function(){
             localStorage.setItem('watchGamepad', 'off');
           }
       }
+
+      var game = $('.game_filename').attr('id');
+      var gamesytem = $('.game_system').attr('id');
+      $.get("{{ url('game/backup/sync/get') }}/"+gamesytem+"/"+game);
             
     };
 
@@ -249,6 +253,8 @@ $(document).ready(function(){
 
     <div class="mam txtcenter" id="check">
       <a href="#" class="material-icons" id="demo_launch" style="position:fixed">ondemand_video</a>
+      <a href="/backups" class="material-icons" id="open_save" style="position:fixed">save</a>
+      <a href="/config" class="material-icons" id="open_settings" style="position:fixed">settings</a>
       <img src="{{public_path('assets/img/recalboy.png')}}" class="checkgame">
     </div>
 
