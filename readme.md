@@ -197,6 +197,11 @@ Other limitations:
 * Demo mode: find a better way to handle Emulation Station off/on.
 * Arcade games : finding, adding, and managing the display of instructions card / move lists, to never forget how to make a Hadoken :) 
 
+## Thanks to
+
+* [Recalbox Community](https://forum.recalbox.com/).
+* [Cute File Browser](https://tutorialzine.com/2014/09/cute-file-browser-jquery-ajax-php): used (customised) for browsing backups.
+
 ## License
 Recalboy is open-sourced software licensed under the MIT license.
 Feel free to fork it and improve it. Keep in mind I don't consider myself as a developer, so don't be too rough with my code :)
