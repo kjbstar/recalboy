@@ -13,7 +13,7 @@ I made it for a personal project, to provide a [little second screen](public/ass
 
 **New in v0.3** ! You can manage backups of your saves files !
 
-<img src="public/assets/img/readme/manager.png" width="600">
+<img src="public/assets/img/readme/manager.png" width="800">
 
 * Say goodbye to corrupted saves, never lose your progress anymore !
 * Recalboy automatically backups your latest saves when you exit a game.
