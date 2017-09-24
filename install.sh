@@ -3,7 +3,7 @@
 # kjbstar - https://github.com/kjbstar/recalboy
 # Create Apache vhost from : https://github.com/RoverWire/virtualhost/blob/master/virtualhost.sh
 
-LATEST_RELEASE="0.3"
+LATEST_RELEASE="0.3.0.1"
 IP="$(hostname -I)"
 ANSWER_DEFAULT="y"
 RECALBOY_DEFAULT_PATH="/var/www/html"
