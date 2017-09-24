@@ -44,10 +44,10 @@ $app->group(['prefix' => 'config'], function($app)
     $app->get('','ConfigController@index');
     $app->get('history','ConfigController@history');
     $app->post('','ConfigController@update');
-    $app->get('check/retroarch/networkcommands', function() {
+    $app->get('check/retroarch/networkcommands', ['as' => 'networkcommands', function() {
     	$config = App\Models\Recalbox\Configuration::enableRetroarchNetworkCommands();
     	return $config;
-    });
+    }]);
     $app->get('cache/clear','ConfigController@cacheClear');
 });
 

@@ -3,6 +3,7 @@
 namespace App\Models\Recalbox;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Input;
 
 class Configuration extends Model
 {
@@ -50,32 +51,44 @@ class Configuration extends Model
             $param = 'network_cmd_enable';
         }
 
-        if ($config === null) {
+        if (Input::has('path')) {
+            $config = Input::get('path');
+        } elseif ($config != null) {
+            $config = $config;
+        } else {
             $config = '/recalbox/share/system/configs/retroarch/retroarchcustom.cfg';
-        }        
+        }  
 
-        // LECTURE
-        \SSH::run('cat '.$config.' | grep "^'.$param.'" | sed "s/^\(.*\)\('.$param.' = \)\(.*\)$/\3/" | tr -d "\""', function($line) {
-            self::$output = $line;
-        });
+        try {
+            
+            // LECTURE
+            \SSH::run('cat '.$config.' | grep "^'.$param.'" | sed "s/^\(.*\)\('.$param.' = \)\(.*\)$/\3/" | tr -d "\""', function($line) {
+                self::$output = $line;
+            });
 
-        // Déjà activé ? Rien à faire.
-        if (trim(self::$output) == 'true') {
-            return trim(self::$output);
-        }
+            // Déjà activé ? Rien à faire.
+            if (trim(self::$output) == 'true') {
+                return 'RetroArch Network Commands are already activated. You can close this windows.';
+            }
 
-        // Pas activé ? Activons le !
-        elseif (trim(self::$output) == 'false') {
-            \SSH::run('sed -i "s/\('.$param.' *= *\).*/\1\"true\"/" '.$config);
-            return 'RetroArch Network Commands have been activated !';
-        }
+            // Pas activé ? Activons le !
+            elseif (trim(self::$output) == 'false') {
+                \SSH::run('sed -i "s/\('.$param.' *= *\).*/\1\"true\"/" '.$config);
+                return 'RetroArch Network Commands have been activated ! You can close this windows.';
+            }
 
-        // Pas trouvé ? Ajoutons-le !
-        else {
-            \SSH::run("echo 'network_cmd_enable = \"true\"' >> ".$config);
-            return 'RetroArch Network Commands have been added to config file !';
-        }
+            // Pas trouvé ? Ajoutons-le !
+            else {
+                \SSH::run("echo 'network_cmd_enable = \"true\"' >> ".$config);
+                return 'RetroArch Network Commands have been added to config file ! You can close this windows.';
+            }
        
+        } catch (Exception $e) {
+            return 'Impossible to connect to your Recalbox. Please check IP in Config is correct, and that your Recalbox is turned on and connected to the network.';
+        }
+
+
+
 
     }     
 

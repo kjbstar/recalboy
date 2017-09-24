@@ -55,12 +55,33 @@
       </p>
     </div>
 
+    <h1>Activate RetroArch Network Commands</h1>
+    <div id="intro">
+      <p style="color: green">You should do that only one time ! If you already activated it, you can skip this section.</p>
+      <p>
+        <ol>
+          <li>Enter the IP of your Recalbox in the Configuration box above.</li>
+          <li>Save :)</li>
+          <li>Make sure your Recalbox in ON and connected to your local network.</li>
+          <li><a href="config/check/retroarch/networkcommands" target="_blank">Click here</a>.</li>
+          <li>Done !</li>
+        </ol>
+      </p>
+      <p>If you have an error of Recalboy, please check that your Recalbox is connected to your local network, and that you entered the right IP in the Config box above.</p>
+      <p>
+        <span style="color: blue">You have a custom RetroArch config file, with a custom name ?</span><br />
+        Then copy this link in your browser :<br />
+        <span style="font-style:italic">{{ route('networkcommands') }}?path=/recalbox/share/system/configs/retroarch/<span style="color:blue">YourConfigFile.cfg</span></span>
+      </p>  
+    </div>
+
     <h1>Clear Cache</h1>
     <div id="intro">
       <p>Useful if you have some issues to detect a game after you made a scrap on Recalbox.</p>
       <p><center><span id="clearcache" onclick="clearCache()">Click here</span></center></p>
         
     </div>
+
 
   </main>
 
