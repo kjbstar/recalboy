@@ -40,7 +40,7 @@ class ConfigController extends BaseController
 		$backup_filename = preg_replace('/[[:space:]]+/', '-', $backup_filename);
 
 		if (!File::exists(storage_path('app/public/backups/config'))) {
-				File::makeDirectory(storage_path('app/public/backups/config'));
+				File::makeDirectory(storage_path('app/public/backups/config'), 0777, true);
 		}
 		$cmd = shell_exec('echo "'.$config_old.'" > '.storage_path('app/public/backups/config/'.$backup_filename));
 
