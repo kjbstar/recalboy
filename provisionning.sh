@@ -30,7 +30,7 @@ echo ""
 echo ""
 
 	sudo apt-get update
-	sudo apt-get install apache2 php5 php5-curl curl unzip
+	sudo apt-get install -y apache2 php5 php5-curl curl unzip
 	echo ""
 	echo ""
 	a2enmod rewrite
