@@ -79,7 +79,7 @@ class Configuration extends Model
 
             // Pas trouvé ? Ajoutons-le !
             else {
-                \SSH::run("echo 'network_cmd_enable = \"true\"' >> ".$config);
+                \SSH::run("echo -e '\nnetwork_cmd_enable = \"true\"' >> ".$config);
                 return 'RetroArch Network Commands have been added to config file ! You can close this windows.';
             }
        
