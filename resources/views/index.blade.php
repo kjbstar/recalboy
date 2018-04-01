@@ -77,45 +77,63 @@ $(document).ready(function(){
 
             success: function(response) {
               if (response.demo === true) {
+                console.log('Attract Mode : Jeu lancé, recherche pour affichage...');
                 goCheckGame();
+                console.log('LocalStorage : Demon ON');
                 localStorage.setItem('demo', 'on');
               }               
             },
 
             complete: function(response) {
+              console.log('Attract Mode : lancement de ManageDemo');
               manageDemo();
             }
          });    
       }
       if (localStorage.getItem('demo') === 'on') {
+        console.log('Attract Mode : un jeu tourne déjà, checkgame & managedemo');
         goCheckGame();
         manageDemo();
       }  
     };
 
 
-    function manageDemo() {
-      var timeOnScreen = {{ $demo_duration }};
+    // On sort ça en mettant en fonction globale (bouh pas bien) pour pouvoir gérer la remise à zéro du timer lorsqu'on skip un jeu
+    var timeOnScreen = {{ $demo_duration }};
+    var RecalBoy = {
+      timer: function() {
+         window.setInterval(function(){
+                    if (localStorage.getItem('demo') === 'on') {
+                      actionQuit();
+                      $.get("{{ url('/action') }}/QUIT");
+                      $.get("{{ url('game/demo/kill') }}");
+                      localStorage.setItem('demo', 'off');
+                      demogame();
+                      console.log('Attract Mode : nouveau jeu lancé');
+                    }
+                  }, timeOnScreen*1000);           
+      }       
+    }
 
-      // Rotation des jeux quand aucune interaction
-      window.setInterval(function(){
-        if (localStorage.getItem('demo') === 'on') {
-          actionQuit();
-          $.get("{{ url('/action') }}/QUIT");
-          $.get("{{ url('game/demo/kill') }}");
-          localStorage.setItem('demo', 'off');
-          demogame();
-        }
-      }, timeOnScreen*1000);
+
+
+    function manageDemo() {
+
+      RecalBoy.timer();
+      console.log('Attract Mode : Timer lancé');
 
       // Surveillance des interactions du joueur
       window.setInterval(function(){
         if (localStorage.getItem('demo') === 'on') {
           checkPlayer();
+          console.log('LocalStorage : Demo ON');
+          console.log('Attract Mode : surveillance des interactions du joueur');
         }          
         if (localStorage.getItem('watchGamepad') === 'on') {
+          console.log('LocalStorage : watchGamepad ON');
           $.get("{{ url('game/demo/player') }}", function(response){
             if (response.demo === 'gamepad_quit') {
+              console.log('Attract Mode : jeu quitté, withDemoOff = yes');
               var withDemoOff = 'yes';
               quitGamepad(withDemoOff);
             } 
@@ -134,16 +152,24 @@ $(document).ready(function(){
 
             success: function(response) {
               if (response.demo === false) {
+                console.log('Attract Mode : le joueur a pris la main !');
+                console.log('LocalStorage : Demo OFF');
+                console.log('LocalStorage : watchGamepad ON');
                 localStorage.setItem('demo', 'off');
                 localStorage.setItem('watchGamepad', 'on');
               }
               if (response.demo === 'gamepad_skip') {
+                console.log('Attract Mode : skipped game');
                 actionQuit();
                 $.get("{{ url('/action') }}/QUIT");
                 $.get("{{ url('game/demo/kill') }}");
+                console.log('Attract Mode : Lancement du jeu suivant...');
                 demogame();
+                console.log('Attract Mode : reset du timer');
+                clearInterval(RecalBoy.timer());
               }              
               if (response.demo === 'gamepad_quit') {
+                console.log('Attract Mode : quitté manuellement, on éteint ce mode.');
                 var withDemoOff = 'yes';
                 quitGamepad(withDemoOff);
               }                             
