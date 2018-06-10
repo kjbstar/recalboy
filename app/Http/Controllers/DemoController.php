@@ -146,7 +146,7 @@ class DemoController extends BaseController
 		Config::setValue('audio.volume', getenv('DEMO_VOLUP'));			
 
     	// On redémarre ES
-		\SSH::into('recalbox_long')->run($commande);
+		\SSH::into('recalbox')->run($commande);
 
     	return response()->json(array('demo' => false));
 
